@@ -228,7 +228,7 @@ st.subheader("Where was GW170817 in the sky?")
 #### Needs Cache-ing
 
 # The Hipparcos mission provides our star catalog.
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_catalog():
     with load.open(hipparcos.URL) as f:
         stars = hipparcos.load_dataframe(f)
