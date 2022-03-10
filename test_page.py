@@ -228,9 +228,13 @@ st.subheader("Where was GW170817 in the sky?")
 #### Needs Cache-ing
 
 # The Hipparcos mission provides our star catalog.
+@st.cache
+def load_catalog():
+    with load.open(hipparcos.URL) as f:
+        stars = hipparcos.load_dataframe(f)
+    return stars
 
-with load.open(hipparcos.URL) as f:
-    stars = hipparcos.load_dataframe(f)
+stars = load_catalog()
 
 # And the constellation outlines come from Stellarium.  We make a list
 # of the stars at which each edge stars, and the star at which each edge
@@ -239,8 +243,14 @@ with load.open(hipparcos.URL) as f:
 url = ('https://raw.githubusercontent.com/Stellarium/stellarium/master'
        '/skycultures/western_SnT/constellationship.fab')
 
-with load.open(url) as f:
-    constellations = stellarium.parse_constellations(f)
+@st.cache
+def load_constellations(url):
+    with load.open(url) as f:
+        constellations = stellarium.parse_constellations(f)
+    return constellations
+
+constellations = load_constellations(url)
+
 
 edges = [edge for name, edges in constellations for edge in edges]
 edges_star1 = [star1 for star1, star2 in edges]
@@ -257,7 +267,15 @@ projection = build_stereographic_projection(gw170817)
 field_of_view_degrees = 100.0
 limiting_magnitude = 5.0
 
-planets = load('de421.bsp')
+planet_file = 'de421.bsp'
+
+#@st.cache
+#def load_planets(filename):
+#    planets = load(filename)
+#    return planets
+
+planets = load(planet_file)
+
 earth = planets['earth']
 
 ts = load.timescale()
