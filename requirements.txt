@@ -8,7 +8,7 @@ attrs==21.4.0
 backcall==0.2.0
 base58==2.1.1
 beautifulsoup4==4.10.0
-bokeh==2.4.2
+bokeh==2.4.1
 bleach==4.1.0
 blinker==1.4
 cachetools==5.0.0
