@@ -209,7 +209,7 @@ if chirp_option == "Chirp Game":
 
         # Set up plot
         plot = figure(height=600, width=1000, title="GW match chirp",
-              tools="crosshair,pan,reset,save,wheel_zoom")
+              tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-2, 0])
 
         plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
         plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
