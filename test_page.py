@@ -3,10 +3,13 @@ import numpy as np
 from astropy.table import Table
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
+from matplotlib import animation
+from matplotlib.patches import Circle
 from pycbc.waveform import get_td_waveform, get_fd_waveform
 #from gwpy.timeseries import TimeSeries
 import pandas as pd
-
+from twirl.binary import Binary
+from twirl.artists import BinaryBlackHole
 
 # skyfield
 from skyfield.data import hipparcos, mpc, stellarium
@@ -33,165 +36,278 @@ st.table(dataframe)
 
 if st.checkbox("Wave Tutorial"):
 
-	"""
-	
-	
-	### This is a wave
-	
-	$ W = A \sin (\omega t + \phi)$
-	"""
-	
-	time = np.arange(0,10, 0.01)
-	
-	A = 5
-	omega = 4
-	phi = np.pi/2
-	
-	W = A * np.sin(omega*time + phi)
-	
-	fig = plt.figure(figsize=(10,6))
-	
-	plt.plot(time, W)
-	plt.xlabel("time (seconds)")
-	
-	fig
-	
-	"""
-	
-	Here, 
-	
-	**A** is the wave amplitude, which determines the height of the peaks.
-	
-	
-	**$\omega$** is the wave frequency, which determines how many cycles of the wave you see every second.
-	
-	**$\phi$** is the phase, which determines at what point the wave starts at time = 0, whether it is the crest, the trough, or somewhere in between!
-	
-	
-	"""
-	
-	st.subheader("You can make your own wave!")
-	
-	
-	A = st.slider('Amplitude', min_value=0, max_value=10)
-	omega = st.slider('Frequency', min_value=1, max_value=5)
-	phi = st.slider('Phase', min_value=0., max_value=np.pi)
-	
-	W = A * np.sin(omega*time + phi)
-	
-	fig = plt.figure(figsize=(10,6))
-	
-	plt.plot(time, W)
-	plt.xlabel("time (seconds)")
-	
-	fig
+        """
+        
+        
+        ### This is a wave
+        
+        $ W = A \sin (\omega t + \phi)$
+        """
+        
+        time = np.arange(0,10, 0.01)
+        
+        A = 5
+        omega = 4
+        phi = np.pi/2
+        
+        W = A * np.sin(omega*time + phi)
+        
+        fig = plt.figure(figsize=(10,6))
+        
+        plt.plot(time, W)
+        plt.xlabel("time (seconds)")
+        
+        fig
+        
+        """
+        
+        Here, 
+        
+        **A** is the wave amplitude, which determines the height of the peaks.
+        
+        
+        **$\omega$** is the wave frequency, which determines how many cycles of the wave you see every second.
+        
+        **$\phi$** is the phase, which determines at what point the wave starts at time = 0, whether it is the crest, the trough, or somewhere in between!
+        
+        
+        """
+        
+        st.subheader("You can make your own wave!")
+        
+        
+        A = st.slider('Amplitude', min_value=0, max_value=10)
+        omega = st.slider('Frequency', min_value=1, max_value=5)
+        phi = st.slider('Phase', min_value=0., max_value=np.pi)
+        
+        W = A * np.sin(omega*time + phi)
+        
+        fig = plt.figure(figsize=(10,6))
+        
+        plt.plot(time, W)
+        plt.xlabel("time (seconds)")
+        
+        fig
 
 
 chirp_option = st.sidebar.selectbox("Select Chirp tutorial", ["Chirp Demo", "Chirp Game"])
 
 if chirp_option == "Chirp Demo":
-	
-	"""
+        
+        """
 
-	### This is a chirp
-	"""
-	
-	m1 = 30
-	m2 = 28
-	
-	"""
-	Mass 1 = 30 $M_{\odot}$ \n
-	Mass 2 = 28 $M_{\odot}$
-	"""
-	
-	hp, hc = get_td_waveform(approximant="IMRPhenomD",
-	         mass1=m1,
-	         mass2=m2,
-	         coa_phase=np.pi,
-	         delta_t=1.0/2048,
-	         f_lower=40.)
-	
-	h = np.sqrt(hp**2 + hc**2)
-	
-	n_samples = hp.shape[0]
-	sample_rate = 2048
-	
-	seglen = n_samples/sample_rate
-	
-	time = np.linspace(-seglen, 0, n_samples)
-	
-	f = plt.figure(figsize=(12,4))
-	plt.plot(time,hp)
-	plt.xlabel("time (seconds)")
-	plt.ylabel("Gravitational Wave strain")
-	f
-	#ts = TimeSeries.from_pycbc(hp)
+        ### This is a chirp
+        """
+        
+        m1 = 30
+        m2 = 28
+        
+        """
+        Mass 1 = 30 $M_{\odot}$ \n
+        Mass 2 = 28 $M_{\odot}$
+        """
+        
+        hp, hc = get_td_waveform(approximant="IMRPhenomD",
+                 mass1=m1,
+                 mass2=m2,
+                 coa_phase=np.pi,
+                 delta_t=1.0/2048,
+                 f_lower=40.)
+        
+        h = np.sqrt(hp**2 + hc**2)
+        
+        n_samples = hp.shape[0]
+        sample_rate = 2048
+        
+        seglen = n_samples/sample_rate
+        
+        time = np.linspace(-seglen, 0, n_samples)
+        
+        f = plt.figure(figsize=(12,4))
+        plt.plot(time,hp)
+        plt.xlabel("time (seconds)")
+        plt.ylabel("Gravitational Wave strain")
+        f
+        #ts = TimeSeries.from_pycbc(hp)
+        plt.close()
+
+
+        #plt.style.use('dark_background')
+        fig,ax = plt.subplots(figsize=(5,5))
+        ax.set_axis_off()
+
+        fps = 30.
+        length = 8.
+
+        omega = 30./(m1 + m2)
+
+        # create a Binary instance for the event
+        binary = Binary(
+            m1 = m1,
+            m2 = m2,
+            alpha = 45.,
+            beta = 20.,
+            gamma = 80.,
+            omega = omega,
+            frame_rate = fps
+            )
+
+            # evolve the binary over one orbit
+        n_frames = int(length*fps)
+
+        binary.evolve(n_frames)
+
+    # make BBH artist
+        bbh = BinaryBlackHole(
+            binary = binary,
+            ax = ax,
+            name='orbit',
+            BH_scale = 1./200
+        )
+
+        artist_dict = {}
+        def init():
+            artist_dict.update(bbh.setup_artists())
+        # configure plot axes, title
+            ax.set_xlim([-1,1])
+            ax.set_ylim([-1,1])
+            #if args.name is not None:
+            #    print('putting names on events')
+            #    ax.set_title(args.name)
+            return artist_dict
+
+        def animate(i):
+            artist_dict.update(bbh.get_artists(i))
+            return artist_dict
+
+    #print(f'saving to {args.outfile}')
+        outfile = f"temp/gw150914.gif"
+        anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
+        anim.save(outfile,fps=fps,writer='imagemagick')
+        #anim.save(outfile,fps=fps)
+        st.image(outfile)
+
 
 if chirp_option == "Chirp Game":
-	"""
-	
-	### You can make your own chirp!
-	"""
-	
-	m1 = st.slider('Mass 1', min_value=20, max_value=50)
-	m2 = st.slider('Mass 2', min_value=10, max_value=m1)
-	
-	hp, hc = get_td_waveform(approximant="IMRPhenomD",
-	         mass1=m1,
-	         mass2=m2,
-	         coa_phase=np.pi,
-	         delta_t=1.0/2048,
-	         f_lower=20.)
-	
-	hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
-	         mass1=30,
-	         mass2=28,
-	         coa_phase=np.pi,
-	         delta_t=1.0/2048,
-	         f_lower=20.)
-	
-	n_samples = hp.shape[0]
-	sample_rate = 2048
-	
-	seglen = n_samples/sample_rate
-	
-	time = np.linspace(-seglen, 0, n_samples)
-	
-	ref_samples = hp1.shape[0]
-	sample_rate = 2048
-	
-	seglen1 = ref_samples/sample_rate
-	
-	time1 = np.linspace(-seglen1, 0, ref_samples)
-	
-	hp_norm = hp / np.linalg.norm(hp)
-	hp1_norm = hp1 / np.linalg.norm(hp1)
-	#conv = np.convolve(hp, hp1)
-	match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
-	
-	def result_statement(match):
-	    if 0.0 < match <= 0.25:
-	        rs = "Different chirps, try again!"
-	    elif 0.25 < match <= 0.5:
-	        rs = "Slight overlap, try again!"
-	    elif 0.5 < match <= 0.75:
-	        rs = "Getting closer... try again!"
-	    elif 0.75 < match < 1.0:
-	        rs = "Almost there... try again!"
-	    elif match == 1.0:
-	        rs = "Perfect!"
-	    return rs
-	        
-	
-	f = plt.figure(figsize=(12,4))
-	plt.plot(time1,hp1)
-	plt.plot(time, hp, c='black', linestyle="--", label=f"{result_statement(match)}")
-	plt.xlabel("time (seconds)")
-	plt.xlim(-2.0,0.0)
-	plt.ylabel("Gravitational Wave strain")
-	plt.legend(fontsize=24)
-	f
-	
+        """
+        
+        ### You can make your own chirp!
+        """
+        
+        m1 = st.slider('Mass 1', min_value=20, max_value=50)
+        m2 = st.slider('Mass 2', min_value=10, max_value=30)
+        
+        hp, hc = get_td_waveform(approximant="IMRPhenomD",
+                 mass1=m1,
+                 mass2=m2,
+                 coa_phase=np.pi,
+                 delta_t=1.0/2048,
+                 f_lower=20.)
+        
+        hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
+                 mass1=30,
+                 mass2=28,
+                 coa_phase=np.pi,
+                 delta_t=1.0/2048,
+                 f_lower=20.)
+        
+        n_samples = hp.shape[0]
+        sample_rate = 2048
+        
+        seglen = n_samples/sample_rate
+        
+        time = np.linspace(-seglen, 0, n_samples)
+        
+        ref_samples = hp1.shape[0]
+        sample_rate = 2048
+        
+        seglen1 = ref_samples/sample_rate
+        
+        time1 = np.linspace(-seglen1, 0, ref_samples)
+        
+        hp_norm = hp / np.linalg.norm(hp)
+        hp1_norm = hp1 / np.linalg.norm(hp1)
+        #conv = np.convolve(hp, hp1)
+        match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
+        
+        def result_statement(match):
+            if 0.0 < match <= 0.25:
+                rs = "Different chirps, try again!"
+            elif 0.25 < match <= 0.5:
+                rs = "Slight overlap, try again!"
+            elif 0.5 < match <= 0.75:
+                rs = "Getting closer... try again!"
+            elif 0.75 < match < 1.0:
+                rs = "Almost there... try again!"
+            elif match == 1.0:
+                rs = "Perfect!"
+            return rs
+                
+        
+        f = plt.figure(figsize=(12,4))
+        plt.plot(time1,hp1)
+        plt.plot(time, hp, c='black', linestyle="--", label=f"{result_statement(match)}")
+        plt.xlabel("time (seconds)")
+        plt.xlim(-2.0,0.0)
+        plt.ylabel("Gravitational Wave strain")
+        plt.legend(fontsize=24)
+        f
+        plt.close()      
+          
+        fig,ax = plt.subplots(figsize=(6,6))
+        ax.set_axis_off()
+
+        fps = 30.
+        length = 8.
+
+        omega = 40./(m1 + m2)
+
+        # create a Binary instance for the event
+        binary = Binary(
+            m1 = m1,
+            m2 = m2,
+            alpha = 50.,
+            beta = 20.,
+            gamma = 95.,
+            omega = omega,
+            frame_rate = fps
+            )
+
+        # evolve the binary over one orbit
+        n_frames = int(length*fps)
+
+        binary.evolve(n_frames)
+
+    # make BBH artist
+        bbh = BinaryBlackHole(
+            binary = binary,
+            ax = ax,
+            name='orbit',
+            BH_scale = 1./100
+        )
+
+        artist_dict = {}
+        def init():
+            artist_dict.update(bbh.setup_artists())
+        # configure plot axes, title
+            ax.set_xlim([-1,1])
+            ax.set_ylim([-1,1])
+            #if args.name is not None:
+            #    print('putting names on events')
+            #    ax.set_title(args.name)
+            return artist_dict
+
+        def animate(i):
+            artist_dict.update(bbh.get_artists(i))
+            return artist_dict
+
+    #print(f'saving to {args.outfile}')
+        outfile = f"temp/bbh.gif"
+        anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
+        anim.save(outfile,fps=fps,writer='imagemagick')
+        #anim.save(outfile,fps=fps)
+        st.image(outfile)
+
 
 
 """
@@ -342,3 +458,10 @@ ax.yaxis.set_visible(False)
 ax.set_aspect(1.0)
 
 fig
+
+
+
+
+
+
+
