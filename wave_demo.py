@@ -13,7 +13,7 @@ from pycbc.waveform import get_td_waveform, get_fd_waveform
 #from twirl.artists import BinaryBlackHole
 import wave
 from scipy.io import wavfile
-import soundfile as sf
+#import soundfile as sf
 
 #from gwpy.timeseries import TimeSeries
 import pandas as pd
@@ -98,7 +98,7 @@ You may hear the sound wave plotted above makes here.
 """
 t_audio = np.arange(0,1,0.01e-3)
 W_audio = A * np.sin(omega*1e5*t_audio + phi)
-sf.write("ex1_audio.wav",W_audio,4096)
+wavfile.write("ex1_audio.wav",4096,W_audio)
 st.audio("ex1_audio.wav")
 
 
@@ -131,7 +131,7 @@ plot
 
 t_audio = np.arange(0,1,0.01e-3)
 W_audio = A * np.sin(omega*1e5*t_audio + phi)
-sf.write("temp/mywave_audio.wav",W_audio,4096)
+wavfile.write("temp/mywave_audio.wav",4096, W_audio)
 st.audio("temp/mywave_audio.wav")
 
 """
