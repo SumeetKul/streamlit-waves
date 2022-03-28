@@ -98,8 +98,8 @@ You may hear the sound wave plotted above makes here.
 """
 t_audio = np.arange(0,1,0.01e-3)
 W_audio = A * np.sin(omega*1e5*t_audio + phi)
-sf.write("temp/ex1_audio.wav",W_audio,4096)
-st.audio("temp/ex1_audio.wav")
+sf.write("ex1_audio.wav",W_audio,4096)
+st.audio("ex1_audio.wav")
 
 
 """
