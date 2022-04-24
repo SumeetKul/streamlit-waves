@@ -1,5 +1,5 @@
 import numpy as np
-import twirl.binary
+import binary
 from matplotlib import pyplot as plt
 from matplotlib.patches import Ellipse,Circle
 
