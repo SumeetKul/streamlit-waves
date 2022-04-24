@@ -9,8 +9,8 @@ from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, Slider, TextInput
 from bokeh.plotting import figure
 from pycbc.waveform import get_td_waveform, get_fd_waveform
-#from twirl.binary import Binary
-#from twirl.artists import BinaryBlackHole
+import binary
+import artists 
 import wave
 from scipy.io import wavfile
 #import soundfile as sf
