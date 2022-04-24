@@ -147,10 +147,68 @@ Think of an ambulance siren. Its loudness varies, as does its frequency or pitch
 
 """
 
-st.audio("ambulance-siren.m4a")
+st.audio("ambulance-siren.mp3")
+
+"""
+The waveform of a siren looks like this. Can you see the variation in frequency and amplitude here?
+"""
+
+t = np.arange(4096)/1024
+A_siren = np.sin(2*np.pi*0.5*t)
+f_siren = np.sin(2*np.pi*0.7*t)
+
+w_siren = A_siren*np.sin(2*np.pi*f_siren*t)
+
+source = ColumnDataSource(data=dict(x=t, y=w_siren))
+
+# Set up plot
+plot = figure(height=600, width=1000, title="My Wave",
+      tools="crosshair,pan,reset,save,wheel_zoom",
+      x_range=[0, 4], y_range=[-2, 2])
+
+plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
+
+plot
+
+"""
+What happens when you have a constant frequency but varying amplitude?
+"""
+
+t = np.arange(4096)/2048
+A_amp = np.sin(2*np.pi*0.5*t)
+f_amp = 2000
+
+w_amp = A_amp*np.sin(2*np.pi*f_amp*t)
+
+source = ColumnDataSource(data=dict(x=t, y=w_amp))
+
+# Set up plot
+plot = figure(height=600, width=1000, title="My Wave",
+      tools="crosshair,pan,reset,save,wheel_zoom",
+      x_range=[0, 4], y_range=[-2, 2])
+
+plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
+
+plot
 
 
+t_audio = np.arange(0,1,0.01e-3)
+W_audio = A_amp*np.sin(2*np.pi*f_amp*t)
+wavfile.write("temp/vary_amp.wav",4096, W_audio)
+st.audio("temp/vary_amp.wav")
 
+if st.checkbox("See the Math behind varying amplitude waves"):
+
+    """
+    ---------------------------------------------------
+    $ W = A \sin (2 \pi f_{amp} t) \sin (\omega t + \phi)$
+
+    Here, 
+
+    **A** is the varying (oscillating) wave amplitude, **$\omega$** is the wave frequency, and **$\phi$** is the phase.
+
+    ---------------------------------------------------
+    """
 
 #chirp_option = st.sidebar.selectbox("Select Chirp tutorial", ["Chirp Demo", "Chirp Game"])
 

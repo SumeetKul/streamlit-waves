@@ -8,8 +8,8 @@ from matplotlib.patches import Circle
 from pycbc.waveform import get_td_waveform, get_fd_waveform
 #from gwpy.timeseries import TimeSeries
 import pandas as pd
-from twirl.binary import Binary
-from twirl.artists import BinaryBlackHole
+from binary import Binary
+from artists import BinaryBlackHole
 
 # skyfield
 from skyfield.data import hipparcos, mpc, stellarium
