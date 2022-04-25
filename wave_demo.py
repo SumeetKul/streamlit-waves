@@ -18,6 +18,17 @@ from scipy.io import wavfile
 #from gwpy.timeseries import TimeSeries
 import pandas as pd
 
+def const_note(freq, l, amp=10000, rate=44100):
+    t = np.linspace(0,l,l*rate)
+    data = np.sin(2*np.pi*freq*t)*amp
+    return t, data.astype('int16') # two byte integers
+
+def var_note(freq, l, amp, rate=44100):
+    t = np.linspace(0,l,l*rate)
+    data = np.sin(2*np.pi*freq*t)*amp
+    return t, data.astype('int16') # two byte integers
+
+
 """
 In September 2015, LIGO _observed_ two black holes spiraling into one another, and colliding to form one, larger black hole.
 
@@ -58,7 +69,8 @@ The peaks and troughs represent the extreme points of whatever is oscillating: y
 time = np.arange(0,10, 0.01)
 
 A = 5
-omega = 4
+f = 0.44
+omega = 2*np.pi*f
 phi = np.pi/2
 
 W = A * np.sin(omega*time + phi)
@@ -74,11 +86,11 @@ if st.checkbox("See the Math behind this"):
 
     """
     ---------------------------------------------------
-    $ W = A \sin (\omega t + \phi)$
+    $ W = A \sin (2 \pi f t + \phi)$
 
     Here, 
 
-    **A** is the wave amplitude, **$\omega$** is the wave frequency, and **$\phi$** is the phase.
+    **A** is the wave amplitude, **f** is the wave frequency, and **$\phi$** is the phase.
 
     ---------------------------------------------------
     """
@@ -96,9 +108,12 @@ All sound, whether music or noise, is waves created by vibrating air around us. 
 
 You may hear the sound wave plotted above makes here. 
 """
-t_audio = np.arange(0,1,0.01e-3)
-W_audio = A * np.sin(omega*1e5*t_audio + phi)
-wavfile.write("ex1_audio.wav",4096,W_audio)
+#srate = 32000
+#t_audio = np.linspace(0,4,4*srate)
+#f_audio = 440
+#W_audio = A*1000 * np.sin(2*np.pi*f_audio*t_audio + phi)
+t, W_audio = const_note(440, 4)
+wavfile.write("ex1_audio.wav",44100,W_audio)
 st.audio("ex1_audio.wav")
 
 
@@ -112,7 +127,8 @@ Do you notice anything about the tone? Is it constant or varying?
 """
 
 A = st.slider('Amplitude', min_value=0, max_value=10)
-omega = st.slider('Frequency', min_value=1, max_value=5)
+freq = st.slider('Frequency', min_value=1., max_value=5.)
+omega = 2*np.pi*freq
 phi = st.slider('Phase', min_value=0., max_value=np.pi)
 
 W = A * np.sin(omega*time + phi)
@@ -129,10 +145,15 @@ plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
 
 plot
 
-t_audio = np.arange(0,1,0.01e-3)
-W_audio = A * np.sin(omega*1e5*t_audio + phi)
-wavfile.write("temp/mywave_audio.wav",4096, W_audio)
-st.audio("temp/mywave_audio.wav")
+t, W_audio = const_note(freq*100, 4, amp = A*4000)
+wavfile.write("temp/ex2_audio.wav",44100,W_audio)
+st.audio("temp/ex2_audio.wav")
+
+#t_audio = np.linspace(0,4,4*4096)
+#f_audio = 2*np.pi/omega * 2e5 # scale to KHz.
+#W_audio = A * np.sin(2*np.pi*f_audio*t_audio + phi)
+#wavfile.write("temp/mywave_audio.wav",1024, W_audio)
+#st.audio("temp/ex2.wav")
 
 """
  Listen carefully to the audio of the wave as you change the parameters.
@@ -174,9 +195,9 @@ plot
 What happens when you have a constant frequency but varying amplitude?
 """
 
-t = np.arange(4096)/2048
-A_amp = np.sin(2*np.pi*0.5*t)
-f_amp = 2000
+t = np.arange(0,10,0.01)
+A_amp = 2 + np.sin(2*np.pi*0.5*t)
+f_amp = 5
 
 w_amp = A_amp*np.sin(2*np.pi*f_amp*t)
 
@@ -185,17 +206,17 @@ source = ColumnDataSource(data=dict(x=t, y=w_amp))
 # Set up plot
 plot = figure(height=600, width=1000, title="My Wave",
       tools="crosshair,pan,reset,save,wheel_zoom",
-      x_range=[0, 4], y_range=[-2, 2])
+      x_range=[0, 8], y_range=[-4, 4])
 
 plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
 
 plot
 
-
-t_audio = np.arange(0,1,0.01e-3)
-W_audio = A_amp*np.sin(2*np.pi*f_amp*t)
-wavfile.write("temp/vary_amp.wav",4096, W_audio)
-st.audio("temp/vary_amp.wav")
+t_audio = np.linspace(0,4,4*44100)
+A_audio = 2+np.sin(2*np.pi*1*t_audio)
+t, W_audio = const_note(500, 4, amp=A_audio * 10000)
+wavfile.write("temp/ex3_audio.wav",44100,W_audio)
+st.audio("temp/ex3_audio.wav")
 
 if st.checkbox("See the Math behind varying amplitude waves"):
 
@@ -209,6 +230,62 @@ if st.checkbox("See the Math behind varying amplitude waves"):
 
     ---------------------------------------------------
     """
+
+"""
+Can you think of any real-life examples where you encounter such a sound?
+
+Now, let us keep the amplitude constant but change the frequency, to make the frequency steadily increase or decrease with time:
+"""
+
+if st.checkbox("Decreasing frequency:"):
+
+    t = np.arange(0,10,0.01)
+    A = 3
+    f_red = np.flip(np.power(2, t/10))
+
+    w_red = A*np.sin(2*np.pi*f_red*t)
+
+    source = ColumnDataSource(data=dict(x=t, y=w_red))
+
+    # Set up plot
+    plot = figure(height=600, width=1000, title="My Wave",
+    tools="crosshair,pan,reset,save,wheel_zoom",
+    x_range=[0, 10], y_range=[-4, 4])
+
+    plot.line('x', 'y', line_color='red', source=source, line_width=3, line_alpha=0.6)
+
+    plot
+
+    t_audio = np.flip(np.linspace(np.log(100),np.log(1000),4*44100))
+    f_audio = np.exp(t_audio)
+    t, W_audio = const_note(f_audio*2, 4, amp=5000)
+    wavfile.write("temp/ex4_audio.wav",44100,W_audio)
+    st.audio("temp/ex4_audio.wav")
+
+if st.checkbox("Increasing frequency:"):
+
+    t = np.arange(0,10,0.01)
+    A = 3
+    f_red = np.power(2, t/10)
+
+    w_red = A*np.sin(2*np.pi*f_red*t)
+
+    source = ColumnDataSource(data=dict(x=t, y=w_red))
+
+    # Set up plot
+    plot = figure(height=600, width=1000, title="My Wave",
+    tools="crosshair,pan,reset,save,wheel_zoom",
+    x_range=[0, 10], y_range=[-4, 4])
+
+    plot.line('x', 'y', line_color='blue', source=source, line_width=3, line_alpha=0.6)
+
+    plot
+
+    t_audio = np.linspace(np.log(200),np.log(800),4*44100)
+    f_audio = np.exp(t_audio)
+    t, W_audio = const_note(f_audio*2, 4, amp=5000)
+    wavfile.write("temp/ex5_audio.wav",44100,W_audio)
+    st.audio("temp/ex5_audio.wav")
 
 #chirp_option = st.sidebar.selectbox("Select Chirp tutorial", ["Chirp Demo", "Chirp Game"])
 
