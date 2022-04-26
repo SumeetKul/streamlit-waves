@@ -137,11 +137,11 @@ source = ColumnDataSource(data=dict(x=time, y=W))
 
 
 # Set up plot
-plot = figure(height=600, width=1000, title="My Wave",
+plot = figure(height=600, width=1000, title="Make your own wave",
       tools="crosshair,pan,reset,save,wheel_zoom",
       x_range=[0, 10], y_range=[-12, 12])
 
-plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
+plot.line('x', 'y', source=source, line_color='orange', line_width=3, line_alpha=0.6)
 
 plot
 
@@ -183,11 +183,11 @@ w_siren = A_siren*np.sin(2*np.pi*f_siren*t)
 source = ColumnDataSource(data=dict(x=t, y=w_siren))
 
 # Set up plot
-plot = figure(height=600, width=1000, title="My Wave",
+plot = figure(height=600, width=1000, title="Ambulance Siren",
       tools="crosshair,pan,reset,save,wheel_zoom",
       x_range=[0, 4], y_range=[-2, 2])
 
-plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
+plot.line('x', 'y', source=source, line_width=3, line_color='crimson', line_alpha=0.6)
 
 plot
 
@@ -204,11 +204,11 @@ w_amp = A_amp*np.sin(2*np.pi*f_amp*t)
 source = ColumnDataSource(data=dict(x=t, y=w_amp))
 
 # Set up plot
-plot = figure(height=600, width=1000, title="My Wave",
+plot = figure(height=600, width=1000, title="Varying Amplitude",
       tools="crosshair,pan,reset,save,wheel_zoom",
       x_range=[0, 8], y_range=[-4, 4])
 
-plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
+plot.line('x', 'y', source=source, line_color='green', line_width=3, line_alpha=0.6)
 
 plot
 
@@ -237,56 +237,118 @@ Can you think of any real-life examples where you encounter such a sound?
 Now, let us keep the amplitude constant but change the frequency, to make the frequency steadily increase or decrease with time:
 """
 
-if st.checkbox("Decreasing frequency:"):
+#if st.checkbox("Decreasing frequency:"):
+""" **Decreasing** frequency """
 
-    t = np.arange(0,10,0.01)
-    A = 3
-    f_red = np.flip(np.power(2, t/10))
+t = np.arange(0,10,0.01)
+A = 3
+f_red = np.flip(np.power(2, t/10))
 
-    w_red = A*np.sin(2*np.pi*f_red*t)
+w_red = A*np.sin(2*np.pi*f_red*t)
 
-    source = ColumnDataSource(data=dict(x=t, y=w_red))
+source = ColumnDataSource(data=dict(x=t, y=w_red))
 
-    # Set up plot
-    plot = figure(height=600, width=1000, title="My Wave",
-    tools="crosshair,pan,reset,save,wheel_zoom",
-    x_range=[0, 10], y_range=[-4, 4])
+# Set up plot
+plot = figure(height=600, width=1000, title="Redshift",
+tools="crosshair,pan,reset,save,wheel_zoom",
+x_range=[0, 10], y_range=[-4, 4])
 
-    plot.line('x', 'y', line_color='red', source=source, line_width=3, line_alpha=0.6)
+plot.line('x', 'y', line_color='red', source=source, line_width=3, line_alpha=0.6)
 
-    plot
+plot
 
-    t_audio = np.flip(np.linspace(np.log(100),np.log(1000),4*44100))
-    f_audio = np.exp(t_audio)
-    t, W_audio = const_note(f_audio*2, 4, amp=5000)
-    wavfile.write("temp/ex4_audio.wav",44100,W_audio)
-    st.audio("temp/ex4_audio.wav")
+t_audio = np.flip(np.linspace(np.log(100),np.log(1000),4*44100))
+f_audio = np.exp(t_audio)
+t, W_audio = const_note(f_audio*2, 4, amp=5000)
+wavfile.write("temp/ex4_audio.wav",44100,W_audio)
+st.audio("temp/ex4_audio.wav")
 
-if st.checkbox("Increasing frequency:"):
+#if st.checkbox("Increasing frequency:"):
+""" **Increasing** frequency """
 
-    t = np.arange(0,10,0.01)
-    A = 3
-    f_red = np.power(2, t/10)
+t = np.arange(0,10,0.01)
+A = 3
+f_blue = np.power(2, t/10)
 
-    w_red = A*np.sin(2*np.pi*f_red*t)
+w_blue = A*np.sin(2*np.pi*f_blue*t)
 
-    source = ColumnDataSource(data=dict(x=t, y=w_red))
+source = ColumnDataSource(data=dict(x=t, y=w_blue))
 
-    # Set up plot
-    plot = figure(height=600, width=1000, title="My Wave",
-    tools="crosshair,pan,reset,save,wheel_zoom",
-    x_range=[0, 10], y_range=[-4, 4])
+# Set up plot
+plot = figure(height=600, width=1000, title="Blueshift",
+tools="crosshair,pan,reset,save,wheel_zoom",
+x_range=[0, 10], y_range=[-4, 4])
 
-    plot.line('x', 'y', line_color='blue', source=source, line_width=3, line_alpha=0.6)
+plot.line('x', 'y', line_color='blue', source=source, line_width=3, line_alpha=0.6)
 
-    plot
+plot
 
-    t_audio = np.linspace(np.log(200),np.log(800),4*44100)
-    f_audio = np.exp(t_audio)
-    t, W_audio = const_note(f_audio*2, 4, amp=5000)
-    wavfile.write("temp/ex5_audio.wav",44100,W_audio)
-    st.audio("temp/ex5_audio.wav")
+t_audio = np.linspace(np.log(200),np.log(800),4*44100)
+f_audio = np.exp(t_audio)
+t, W_audio = const_note(f_audio*2, 4, amp=5000)
+wavfile.write("temp/ex5_audio.wav",44100,W_audio)
+st.audio("temp/ex5_audio.wav")
 
+
+"""
+Does this remind you of the whistle of an approaching or receding train? 
+Even though the frequency of a train whistle is constant just like our first wave example, the frequency of the sound you hear changes as the train moves towards you or away from you, due to a phenomenon called the ‘Doppler effect’.
+
+
+Now that we have seen waves that change in amplitude alone or frequency alone, let us see an example where _both_ these quantities **increase** with time:
+"""
+
+t = np.arange(0,10,0.01)
+A_chirp = np.power(1.3, t)
+f_chirp = np.exp(t/12)
+
+w_chirp = A_chirp*np.sin(2*np.pi*f_chirp*t)
+
+source = ColumnDataSource(data=dict(x=t, y=w_chirp))
+
+# Set up plot
+plot = figure(height=600, width=1000, title="Chirp",
+tools="crosshair,pan,reset,save,wheel_zoom",
+x_range=[0, 10], y_range=[-20, 20])
+
+plot.line('x', 'y', line_color='black', source=source, line_width=3, line_alpha=0.6)
+
+plot
+
+t_audio = np.linspace(np.log(100),np.log(500),4*44100)
+f_audio = np.exp(t_audio)
+A_audio = np.power(1.2, t_audio)
+t, W_audio = const_note(f_audio*1.5, 4, amp=A_audio*4000)
+wavfile.write("temp/ex6_audio.wav",44100,W_audio)
+st.audio("temp/ex6_audio.wav")
+
+
+"""
+This is called a chirp, being similar to the sound some birds make.
+
+
+Do you know of any other thing(s) that make such a sound?
+
+
+Since 2015, we also know of the chirp as the sound two black holes make.
+
+
+
+Exactly one hundred years before LIGO’s discovery, Albert Einstein came up with a revolutionary new theory of gravity, the General Theory of Relativity. In it, Einstein said that space and time are not separate entities, but intertwined into a continuous fabric of space-time.
+
+All massive bodies, such as the Earth, the Sun, and even yourselves are embedded inside this fabric, causing it to bend and curve. 
+
+And Gravity is not a force that acts between these massive bodies, but a manifestation of the curvature of the fabric of spacetime.
+
+As the nobel-prize winning physicist John Wheeler, who also coined the term ‘Black Hole’, succinctly put it: “Matter tells spacetime how to curve, Spacetime tells matter how to move”.
+
+When the densest objects in our Universe, such as neutron stars and black holes move around in this fabric, they send out ripples known as Gravitational Waves.
+
+This is how the spiral dance of two black holes orbiting one another creates gravitational waves!
+
+
+So why the chirping waveform?
+"""
 #chirp_option = st.sidebar.selectbox("Select Chirp tutorial", ["Chirp Demo", "Chirp Game"])
 
 #if chirp_option == "Chirp Demo":
@@ -339,84 +401,131 @@ if st.checkbox("Increasing frequency:"):
 #        #plt.ylabel("Gravitational Wave strain")
 #        #f
 #        #ts = TimeSeries.from_pycbc(hp)
-#
 #if chirp_option == "Chirp Game":
-#        """
-#        
-#        ### You can make your own chirp!
-#        """
-#        
-#        m1 = st.slider('Mass 1', min_value=20, max_value=50)
-#        m2 = st.slider('Mass 2', min_value=10, max_value=40)
-#        
-#        hp, hc = get_td_waveform(approximant="IMRPhenomD",
-#                 mass1=m1,
-#                 mass2=m2,
-#                 coa_phase=np.pi,
-#                 delta_t=1.0/2048,
-#                 f_lower=20.)
-#        
-#        hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
-#                 mass1=30,
-#                 mass2=28,
-#                 coa_phase=np.pi,
-#                 delta_t=1.0/2048,
-#                 f_lower=20.)
-#        
-#        n_samples = hp.shape[0]
-#        sample_rate = 2048
-#        
-#        seglen = n_samples/sample_rate
-#        
-#        time = np.linspace(-seglen, 0, n_samples)
-#        
-#        ref_samples = hp1.shape[0]
-#        sample_rate = 2048
-#        
-#        seglen1 = ref_samples/sample_rate
-#        
-#        time1 = np.linspace(-seglen1, 0, ref_samples)
-#        
-#        hp_norm = hp / np.linalg.norm(hp)
-#        hp1_norm = hp1 / np.linalg.norm(hp1)
-#        #conv = np.convolve(hp, hp1)
-#        match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
-#         
-#        def result_statement(match):
-#            if 0.0 < match <= 0.25:
-#                rs = "Different chirps, try again!"
-#            elif 0.25 < match <= 0.5:
-#                rs = "Slight overlap, try again!"
-#            elif 0.5 < match <= 0.75:
-#                rs = "Getting closer... try again!"
-#            elif 0.75 < match < 1.0:
-#                rs = "Almost there... try again!"
-#            elif match == 1.0:
-#                rs = "Perfect!"
-#            return rs
-#                
-#        source = ColumnDataSource(data=dict(x=time, y=hp))
-#        source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
-#
-#        # Set up plot
-#        plot = figure(height=600, width=1000, title="GW match chirp",
-#              tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-2, 0])
-#
-#        plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
-#        plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
-#        #plot.xlabel("time (seconds)")
-#        #plot.ylabel("Gravitational Wave strength")
-#        plot
-#
-#
-#        f = plt.figure(figsize=(12,4))
-#        plt.plot(time1,hp1)
-#        plt.plot(time, hp, c='black', linestyle="--", label=f"{result_statement(match)}")
-#        plt.xlabel("time (seconds)")
-#        plt.xlim(-2.0,0.0)
-#        plt.ylabel("Gravitational Wave strain")
-#        plt.legend(fontsize=24)
-#        f
-#        
+"""
+### You can make your own chirp!
+"""
+
+
+m1 = st.slider('Mass 1', min_value=20, max_value=50)
+m2 = st.slider('Mass 2', min_value=10, max_value=40)
+
+hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
+	 mass1=m1,
+	 mass2=m2,
+	 coa_phase=np.pi,
+	 delta_t=1.0/2048,
+	 f_lower=20.)
+
+hp, hc = get_td_waveform(approximant="IMRPhenomD",
+	 mass1=30,
+	 mass2=28,
+	 coa_phase=np.pi,
+	 delta_t=1.0/2048,
+	 f_lower=20.)
+
+n_samples = hp.shape[0]
+sample_rate = 2048
+
+seglen = n_samples/sample_rate
+
+time = np.linspace(-seglen, 0, n_samples)
+
+ref_samples = hp1.shape[0]
+sample_rate = 2048
+
+seglen1 = ref_samples/sample_rate
+
+time1 = np.linspace(-seglen1, 0, ref_samples)
+
+hp_norm = hp / np.linalg.norm(hp)
+hp1_norm = hp1 / np.linalg.norm(hp1)
+conv = np.convolve(hp, hp1)
+match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
+ 
+def result_statement(match):
+    if 0.0 < match <= 0.25:
+        rs = "Different chirps, try again!"
+    elif 0.25 < match <= 0.5:
+        rs = "Slight overlap, try again!"
+    elif 0.5 < match <= 0.75:
+        rs = "Getting closer... try again!"
+    elif 0.75 < match < 1.0:
+        rs = "Almost there... try again!"
+    elif match == 1.0:
+        rs = "Perfect!"
+    return rs
+	
+source = ColumnDataSource(data=dict(x=time, y=hp))
+source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
+
+# Set up plot
+plot = figure(height=600, width=1000, title="GW match chirp",
+      tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-2, 0])
+
+plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
+plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
+#plot.xlabel("time (seconds)")
+#plot.ylabel("Gravitational Wave strength")
+plot
+
+
+W_audio = np.array(hp)
+wavfile.write("temp/ex6_audio.wav",4096,W_audio)
+st.audio("temp/ex6_audio.wav")
+
+fig,ax = plt.subplots(figsize=(6,6))
+ax.set_axis_off()
+
+fps = 30.
+length = 8.
+
+omega = 40./(m1 + m2)
+
+# create a Binary instance for the event
+binary = binary.Binary(
+    m1 = m1,
+    m2 = m2,
+    alpha = 50.,
+    beta = 20.,
+    gamma = 95.,
+    omega = omega,
+    frame_rate = fps
+    )
+
+# evolve the binary over one orbit
+n_frames = int(length*fps)
+
+binary.evolve(n_frames)
+
+# make BBH artist
+bbh = artists.BinaryBlackHole(
+    binary = binary,
+    ax = ax,
+    name='orbit',
+    BH_scale = 1./100
+)
+
+artist_dict = {}
+def init():
+    artist_dict.update(bbh.setup_artists())
+# configure plot axes, title
+    ax.set_xlim([-1,1])
+    ax.set_ylim([-1,1])
+    #if args.name is not None:
+    #    print('putting names on events')
+    #    ax.set_title(args.name)
+    return artist_dict
+
+def animate(i):
+    artist_dict.update(bbh.get_artists(i))
+    return artist_dict
+
+#print(f'saving to {args.outfile}')
+outfile = f"temp/bbh.gif"
+anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
+anim.save(outfile,fps=fps,writer='imagemagick')
+#anim.save(outfile,fps=fps)
+st.image(outfile)
 
 
