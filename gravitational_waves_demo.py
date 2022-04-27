@@ -68,7 +68,7 @@ if chirp_option == "Chirp Tutorial":
         You just made a wave! A wave is anything that moves back and forth, _oscillating_ in a periodic pattern as time goes by. We can make a chart of these oscillations with time, giving us a waveform of evenly spaced, alternating peaks and troughs. 
 
 
-        The peaks and troughs represent the extreme points of whatever is oscillating: your hand, water in a pond, or [....]
+        The peaks and troughs represent the extreme points of whatever is oscillating: your hand, water in a pond, or a pendulum. 
 
         """
         time = np.arange(0,10, 0.01)
@@ -378,6 +378,25 @@ if chirp_option == "Chirp Tutorial":
         """
 
         st.image("cbc.png")
+
+        """
+        As the two black holes are revolving around each other, their motion radiates gravitational waves. This causes them to lost energy through these waves, pulling them closer towards each other. 
+
+        As the separation between the black holes decreases, the conservation of angular momentum implies that they start revolving faster! Think of a ballet dancer spinning faster as she pulls in her arms and legs close together.
+
+        The faster motion of black holes as they come together increases the _frequency_ of their emitted gravitational waves, since the black holes complete more and more orbits around each other in a given amount of time. 
+
+        At the same time, the _amplitude_ of the emitted gravitational wave also increases, since the spacetime around them gets more and more curved as they are drawn together.
+
+
+        """
+
+        st.image("bbh.gif")
+
+        """
+
+        Each pair of black holes, called a **Binary Black Hole (BBH)** system, thus leaves a characteristic imprint of gravitational waveforms as they spiral in and collide into one.
+        """
         #chirp_option = st.sidebar.selectbox("Select Chirp tutorial", ["Chirp Demo", "Chirp Game"])
 
 #if chirp_option == "Chirp Demo":
