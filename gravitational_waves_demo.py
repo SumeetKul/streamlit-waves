@@ -95,8 +95,8 @@ if chirp_option == "Chirp Tutorial":
 
             Here, 
 
-            **A** is the wave amplitude, **f** is the wave frequency, and **$\phi$** is the phase.
-
+            **A** is the wave amplitude, **f** is the wave frequency, and **$\phi$** is the phase. **t** denotes the time.
+            
             ---------------------------------------------------
             """
 
@@ -231,11 +231,13 @@ if chirp_option == "Chirp Tutorial":
 
             """
             ---------------------------------------------------
-            $ W = A \sin (2 \pi f_{amp} t) \sin (\omega t + \phi)$
+            $ W = A(t) \sin (2 \pi f t + \phi) $
+
+            $ A(t) = \sin (2 \pi f_{amp} t) $
 
             Here, 
 
-            **A** is the varying (oscillating) wave amplitude, **$\omega$** is the wave frequency, and **$\phi$** is the phase.
+            **A(t)** is the time-varying (oscillating) wave amplitude. The Amplitude itself can be a sinusoidally oscillating function, with it's own frequency, $f_{amp}$, which is different from the frequency of the wave itself (**f**). **$\phi$**, as before, is the phase.
 
             ---------------------------------------------------
             """
@@ -297,6 +299,22 @@ if chirp_option == "Chirp Tutorial":
         t, W_audio = const_note(f_audio*2, 4, amp=5000)
         wavfile.write("temp/ex5_audio.wav",44100,W_audio)
         st.audio("temp/ex5_audio.wav")
+
+
+        if st.checkbox("See the Math behind varying frequency waves"):
+
+            """
+            ---------------------------------------------------
+            $ W = A \sin (2 \pi f(t) t + \phi) $
+
+            $ f(t) = e^{t} $
+
+            Here, 
+
+            the wave amplitude **A** is fixed, but the frequency **f(t)** is an exponentially increasing function of time. **$\phi$**, as before, is the phase.
+
+            ---------------------------------------------------
+            """
 
 
         """
