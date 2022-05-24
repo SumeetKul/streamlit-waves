@@ -485,6 +485,8 @@ if chirp_option == "Chirp Game":
                 rs = "Almost there... try again!"
                 rc = "orange"
             elif match == 1.0:
+                st.balloons()
+                #st.success("Match found!")
                 rs = "Perfect!"
                 rc = "green"
             return rs, rc
@@ -493,7 +495,7 @@ if chirp_option == "Chirp Game":
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
         # Set up plot
-        plot = figure(height=600, width=1000, title="GW match chirp",
+        plot = figure(height=400, width=1000, title="GW match chirp",
               tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-5, 0])
 
         plot.title.text = result_statement(match)[0]
@@ -506,10 +508,10 @@ if chirp_option == "Chirp Game":
         plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
         #plot.xlabel("time (seconds)")
         #plot.ylabel("Gravitational Wave strength")
-        plot
+        #plot
 
         # ANIMATION        
-        fig,ax = plt.subplots(figsize=(6,6))
+        fig,ax = plt.subplots(figsize=(3,3))
         ax.set_axis_off()
 
         fps = 30.
@@ -562,6 +564,8 @@ if chirp_option == "Chirp Game":
         anim.save(outfile,fps=fps,writer='imagemagick')
         #anim.save(outfile,fps=fps)
         st.image(outfile)
+
+        plot
 
         #user_input_m1 = st.text_input("Mass 1")
         #user_input_m2 = st.text_input("Mass 2")
@@ -670,14 +674,14 @@ if chirp_option == "Detecting Gravitational Waves":
 
 
         # Set up plot
-        plot1 = figure(height=300, width=1000, title="Reference Wave",
+        plot1 = figure(height=200, width=800, title="Fixed Phase Wave; Phase = 0",
               tools="crosshair,pan,reset,save,wheel_zoom",
               x_range=[0, 4], y_range=[-20, 20])
 
         plot1.line('x', 'y', source=source, line_color='yellow', line_width=3, line_alpha=0.6)
 
         
-
+        plot1
 
         phi2 = st.slider('Phase 2', min_value=0., max_value=2*np.pi, step=0.1)
 
@@ -688,13 +692,12 @@ if chirp_option == "Detecting Gravitational Waves":
 
 
         # Set up plot
-        plot2 = figure(height=300, width=1000, title="Variable Phase",
+        plot2 = figure(height=200, width=800, title="Variable Phase Wave",
               tools="crosshair,pan,reset,save,wheel_zoom",
               x_range=[0, 4], y_range=[-20, 20])
 
         plot2.line('x', 'y', source=source, line_color='blue', line_width=3, line_alpha=0.6)
 
-        plot1
         plot2
 
 
@@ -705,9 +708,11 @@ if chirp_option == "Detecting Gravitational Waves":
 
 
         # Set up plot
-        plot3 = figure(height=300, width=1000, title="Make your own wave",
+        plot3 = figure(height=200, width=800, title="Resultant Wave after Interference",
               tools="crosshair,pan,reset,save,wheel_zoom",
               x_range=[0, 4], y_range=[-20, 20])
+        #plot3.xaxis.ticker = [0, np.pi, 2*np.pi]
+        #plot3.xaxis.major_label_overrides = {1: '0', 2: 'pi', 3: '2pi'}
 
         plot3.line('x', 'y', source=source, line_color='green', line_width=3, line_alpha=0.6)
 
