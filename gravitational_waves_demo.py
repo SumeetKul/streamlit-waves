@@ -30,9 +30,15 @@ def var_note(freq, l, amp, rate=44100):
 
 
 
-chirp_option = st.sidebar.selectbox("Select Chirp Option", ["Chirp Tutorial", "Chirp Game"])
+chirp_option = st.sidebar.selectbox("Select Option", ["Oscillations, Waves, and Chirps", "Chirp Game", "Detecting Gravitational Waves"])
 
-if chirp_option == "Chirp Tutorial":
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+###################################### Page 1: Introduction to Oscillations and Waves ################################################################ 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+if chirp_option == "Oscillations, Waves, and Chirps":
+
+# GW150914 Hook:
 
         """
         In September 2015, LIGO _observed_ two black holes spiraling into one another, and colliding to form one, larger black hole.
@@ -122,8 +128,8 @@ if chirp_option == "Chirp Tutorial":
         #### Sound #1
         """
         t, W_audio = const_note(440, 4)
-        wavfile.write("ex1_audio.wav",44100,W_audio)
-        st.audio("ex1_audio.wav")
+        wavfile.write("const_waves_audio.wav",44100,W_audio)
+        st.audio("const_waves_audio.wav")
 
 
         """
@@ -153,10 +159,13 @@ if chirp_option == "Chirp Tutorial":
         plot.line('x', 'y', source=source, line_color='orange', line_width=3, line_alpha=0.6)
 
         plot
+        """
+        #### Sound #2
+        """
 
         t, W_audio = const_note(freq*100, 4, amp = A*4000)
-        wavfile.write("temp/ex2_audio.wav",44100,W_audio)
-        st.audio("temp/ex2_audio.wav")
+        wavfile.write("temp/const_waves_exercise_audio.wav",44100,W_audio)
+        st.audio("temp/const_waves_exercise_audio.wav")
 
         #t_audio = np.linspace(0,4,4*4096)
         #f_audio = 2*np.pi/omega * 2e5 # scale to KHz.
@@ -170,6 +179,8 @@ if chirp_option == "Chirp Tutorial":
         Does changing the phase modify the sound?
         """
 
+# Real-life waves: varying frequencies and amplitudes:
+
         """
         Waves are thus all around us - they make up the sound of music, and the cacophony of noise. But they do not typically look like the perfect, sinusoidal oscillations shown in the graphs above. 
 
@@ -177,7 +188,7 @@ if chirp_option == "Chirp Tutorial":
 
         """
 
-        st.audio("ambulance-siren.mp3")
+        st.audio("temp/ambulance-siren.mp3")
 
         """
         The waveform of a siren looks like this. Can you see the variation in frequency and amplitude here?
@@ -221,11 +232,15 @@ if chirp_option == "Chirp Tutorial":
 
         plot
 
+        """
+        #### Sound #3
+        """
+
         t_audio = np.linspace(0,4,4*44100)
         A_audio = 2+np.sin(2*np.pi*1*t_audio)
         t, W_audio = const_note(500, 4, amp=A_audio * 10000)
-        wavfile.write("temp/ex3_audio.wav",44100,W_audio)
-        st.audio("temp/ex3_audio.wav")
+        wavfile.write("temp/var_amp_audio.wav",44100,W_audio)
+        st.audio("temp/var_amp_audio.wav")
 
         if st.checkbox("See the Math behind varying amplitude waves"):
 
@@ -268,11 +283,15 @@ if chirp_option == "Chirp Tutorial":
 
         plot
 
+        """
+        #### Sound #4
+        """
+
         t_audio = np.flip(np.linspace(np.log(100),np.log(1000),4*44100))
         f_audio = np.exp(t_audio)
         t, W_audio = const_note(f_audio*2, 4, amp=5000)
-        wavfile.write("temp/ex4_audio.wav",44100,W_audio)
-        st.audio("temp/ex4_audio.wav")
+        wavfile.write("temp/redshift_audio.wav",44100,W_audio)
+        st.audio("temp/redshift_audio.wav")
 
         #if st.checkbox("Increasing frequency:"):
         """ **Increasing** frequency """
@@ -294,11 +313,14 @@ if chirp_option == "Chirp Tutorial":
 
         plot
 
+        """
+        #### Sound #5
+        """
         t_audio = np.linspace(np.log(200),np.log(800),4*44100)
         f_audio = np.exp(t_audio)
         t, W_audio = const_note(f_audio*2, 4, amp=5000)
-        wavfile.write("temp/ex5_audio.wav",44100,W_audio)
-        st.audio("temp/ex5_audio.wav")
+        wavfile.write("temp/blueshift_audio.wav",44100,W_audio)
+        st.audio("temp/blueshift_audio.wav")
 
 
         if st.checkbox("See the Math behind varying frequency waves"):
@@ -342,12 +364,16 @@ if chirp_option == "Chirp Tutorial":
 
         plot
 
+        """
+        #### Sound #6
+        """
+
         t_audio = np.linspace(np.log(100),np.log(500),4*44100)
         f_audio = np.exp(t_audio)
         A_audio = np.power(1.2, t_audio)
         t, W_audio = const_note(f_audio*1.5, 4, amp=A_audio*4000)
-        wavfile.write("temp/ex6_audio.wav",44100,W_audio)
-        st.audio("temp/ex6_audio.wav")
+        wavfile.write("temp/chirp_ex_audio.wav",44100,W_audio)
+        st.audio("temp/chirp_ex_audio.wav")
 
 
         """
@@ -397,59 +423,11 @@ if chirp_option == "Chirp Tutorial":
 
         Each pair of black holes, called a **Binary Black Hole (BBH)** system, thus leaves a characteristic imprint of gravitational waveforms as they spiral in and collide into one.
         """
-        #chirp_option = st.sidebar.selectbox("Select Chirp tutorial", ["Chirp Demo", "Chirp Game"])
 
-#if chirp_option == "Chirp Demo":
-#        
-#        """
-#
-#        ### This is a chirp
-#        """
-#        
-#        m1 = 30
-#        m2 = 28
-#        
-#        """
-#        Mass 1 = 30 $M_{\odot}$ \n
-#        Mass 2 = 28 $M_{\odot}$
-#        """
-#        
-#        hp, hc = get_td_waveform(approximant="IMRPhenomD",
-#                 mass1=m1,
-#                 mass2=m2,
-#                 coa_phase=np.pi,
-#                 delta_t=1.0/2048,
-#                 f_lower=40.)
-#        
-#        h = np.sqrt(hp**2 + hc**2)
-#        
-#        n_samples = hp.shape[0]
-#        sample_rate = 2048
-#        
-#        seglen = n_samples/sample_rate
-#        
-#        time = np.linspace(-seglen, 0, n_samples)
-#        
-#        source = ColumnDataSource(data=dict(x=time, y=hp))
-#
-#
-#        # Set up plot
-#        plot = figure(height=600, width=1000, title="my sine wave",
-#              tools="crosshair,pan,reset,save,wheel_zoom")
-#
-#        plot.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
-#        #plot.xlabel("time (seconds)")
-#        #plot.ylabel("Gravitational Wave strength")
-#        plot
-#
-#
-#        #f = plt.figure(figsize=(12,4))
-#        #plt.plot(time,hp)
-#        #plt.xlabel("time (seconds)")
-#        #plt.ylabel("Gravitational Wave strain")
-#        #f
-#        #ts = TimeSeries.from_pycbc(hp)
 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+################################################# Part 2: Chirp Game #######################################################################################
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 
 if chirp_option == "Chirp Game":
         """
@@ -465,14 +443,14 @@ if chirp_option == "Chirp Game":
                  mass2=m2,
                  coa_phase=np.pi,
                  delta_t=1.0/2048,
-                 f_lower=20.)
+                 f_lower=15.)
 
         hp, hc = get_td_waveform(approximant="IMRPhenomD",
                  mass1=30,
                  mass2=28,
                  coa_phase=np.pi,
                  delta_t=1.0/2048,
-                 f_lower=20.)
+                 f_lower=15.)
 
         n_samples = hp.shape[0]
         sample_rate = 2048
@@ -490,28 +468,39 @@ if chirp_option == "Chirp Game":
 
         hp_norm = hp / np.linalg.norm(hp)
         hp1_norm = hp1 / np.linalg.norm(hp1)
-        #conv = np.convolve(hp, hp1)
-        #match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
+        conv = np.convolve(hp, hp1)
+        match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
          
         def result_statement(match):
             if 0.0 < match <= 0.25:
                 rs = "Different chirps, try again!"
+                rc = "red"
             elif 0.25 < match <= 0.5:
                 rs = "Slight overlap, try again!"
+                rc = "red"
             elif 0.5 < match <= 0.75:
                 rs = "Getting closer... try again!"
+                rc = "orange"
             elif 0.75 < match < 1.0:
                 rs = "Almost there... try again!"
+                rc = "orange"
             elif match == 1.0:
                 rs = "Perfect!"
-            return rs
+                rc = "green"
+            return rs, rc
                 
         source = ColumnDataSource(data=dict(x=time, y=hp))
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
         # Set up plot
         plot = figure(height=600, width=1000, title="GW match chirp",
-              tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-2, 0])
+              tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-5, 0])
+
+        plot.title.text = result_statement(match)[0]
+        plot.title.align = "center"
+        plot.title.text_color =  result_statement(match)[1]
+        plot.title.text_font_size = "25px"
+
 
         plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
         plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
@@ -519,27 +508,7 @@ if chirp_option == "Chirp Game":
         #plot.ylabel("Gravitational Wave strength")
         plot
 
-
-        # function that shifts frequency of a band-passed signal
-        def reqshift(data,fshift=100,sample_rate=2048):
-            """Frequency shift the signal by constant
-            """
-            x = np.fft.rfft(data)
-            T = len(data)/float(sample_rate)
-            df = 1.0/T
-            nbins = int(fshift/df)
-            # print T,df,nbins,x.real.shape
-            y = np.roll(x.real,nbins) + 1j*np.roll(x.imag,nbins)
-            y[0:nbins]=0.
-            z = np.fft.irfft(y)
-            return z
-
-        # parameters for frequency shift
-        fs = 2048
-        fshift = 400.
-        speedup = 1.
-        fss = int(float(fs)*float(speedup))
-        
+        # ANIMATION        
         fig,ax = plt.subplots(figsize=(6,6))
         ax.set_axis_off()
 
@@ -604,20 +573,152 @@ if chirp_option == "Chirp Game":
 
         """ #### Finally, you can compare the sound made by the Black Holes in the first event, GW150914, with the sound made by the Black Holes you selected: """
         """ ##### Original Event Sound """
+
+
+        # This is based on https://www.gw-openscience.org/GW150914data/LOSC_Event_tutorial_GW150914.html#Frequency-shift-the-audio-files
+        # function that shifts frequency of a band-passed signal
+        def freqshift(data,fshift=100,sample_rate=4096):
+            """Frequency shift the signal by constant
+            """
+            x = np.fft.fft(data)
+            T = len(data)/float(sample_rate)
+            df = 1.0/T
+            nbins = int(fshift/df)
+            # print T,df,nbins,x.real.shape
+            #y = np.roll(x.real,nbins) + 1j*np.roll(x.imag,nbins)
+            y = np.roll(x,nbins)
+            y[0:nbins]=0.
+            z = np.fft.ifft(y)
+            return z
+
+        import scipy
+        def freq_mult_hilbert(x, freq_mult):
+            z = scipy.signal.hilbert(x)
+            z_mag = np.abs(z)
+            z_arg = np.unwrap(np.angle(z))
+            z_arg_new = z_arg * freq_mult
+            z_new = z_mag * np.exp(1j * z_arg_new)
+            x_new = -np.real(scipy.signal.hilbert(np.real(z_new)))
+            return x_new
+            #return np.real(z_new)
+
+        # Based on https://www.gw-openscience.org/GW150914data/LOSC_Event_tutorial_GW150914.html#Make-sound-files
+
+        # function to keep the data within integer limits, and write to wavfile:
+        def write_wavfile(filename,fs,data):
+            d_norm = data/np.max(np.abs(data)) * 32767 * 0.9
+            d_left = np.int16(d_norm.real)
+            d_right = np.int16(d_norm.imag)
+            wavfile.write(filename,int(fs), np.transpose(np.array([d_left, d_right])))
+
+
+        fshift = 200
+        fs = 4096*2
+
         tdata = hp
-        template_data = np.int16(tdata/max(abs(tdata)) * 327670)
-        #W_audio = reqshift(template_data, fshift=fshift,sample_rate=fs)
-        W_audio = template_data
-        wavfile.write("temp/game.wav",fs,W_audio)
-        st.audio("temp/game.wav")
+        #template_data = np.int16(tdata/max(abs(tdata)) * 327670)
+        W_audio = freqshift(tdata, fshift=fshift, sample_rate = fs)
+        #W_audio = template_data
+        write_wavfile("temp/chirp_event_audio.wav", fs, W_audio)
+        st.audio("temp/chirp_event_audio.wav")
 
         """ ##### Your Chirp Sound """
         tdata = hp1
-        template_data = np.int16(tdata/max(abs(tdata)) * 327670)
-        #W_audio = reqshift(template_data, fshift=fshift,sample_rate=fs)
-        W_audio = template_data
-        wavfile.write("temp/game.wav",fs,W_audio)
-        st.audio("temp/game.wav")
+        #template_data = np.int16(tdata/max(abs(tdata)) * 327670)
+        W_audio = freqshift(tdata, fshift=fshift, sample_rate = fs)
+        #W_audio = template_data
+        write_wavfile("temp/chirp_template_audio.wav",fs,W_audio)
+        st.audio("temp/chirp_template_audio.wav")
 
-       
-            
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+################################################ Part 3: Detecting Gravitational Waves #######################################################################
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+if chirp_option == "Detecting Gravitational Waves":
+
+        """ 
+        Remember the exercise in **Oscillations, Waves, and Chirps** where you changed different parameters in a wave to see its effect on the waveform and its sound? What was the parameter that caused no change in the sound?
+
+
+        Yes, it was the _phase_ of the wave. The value that is determined by the starting point of the wave's creation, whether it was at a peak, a valley, or somewhere in between.       
+
+        But do not discount the phase as a boring, irrelevant parameter just yet!
+
+        While the gravitational wave amplitude and frequency tell us about the black holes that caused it, phase plays an important role in the actual detection of gravitational waves!
+
+        To understand why, let's dig into how LIGO works.
+
+        LIGO is the Laser _Interferometer_ Gravitational-wave Observatory. It is an _Interferometer_, which studies the interference between two laser beams that are shot along the two 4-km long arms of the L-shaped detector.
+
+
+        <more to add...>        
+        """
+        st.image("temp/ligo.gif")
+
+        time = np.arange(0,10, 0.01)
+        t = np.linspace(0,4,4*44100)
+        A = 7.
+        freq = 1.
+        omega = 2*np.pi*freq
+        omega_audio = omega * 200
+        #phi1 = st.slider('Phase 1', min_value=0., max_value=np.pi)
+        phi1 = 0.0
+        W1 = A * np.sin(omega*time + phi1)
+        W1_audio = A * np.sin(omega_audio*t + phi1)
+        source = ColumnDataSource(data=dict(x=time, y=W1))
+
+
+        # Set up plot
+        plot1 = figure(height=300, width=1000, title="Reference Wave",
+              tools="crosshair,pan,reset,save,wheel_zoom",
+              x_range=[0, 4], y_range=[-20, 20])
+
+        plot1.line('x', 'y', source=source, line_color='yellow', line_width=3, line_alpha=0.6)
+
+        
+
+
+        phi2 = st.slider('Phase 2', min_value=0., max_value=2*np.pi, step=0.1)
+
+        W2 = A * np.sin(omega*time + phi2)
+        W2_audio = A * np.sin(omega_audio*t + phi2)
+
+        source = ColumnDataSource(data=dict(x=time, y=W2))
+
+
+        # Set up plot
+        plot2 = figure(height=300, width=1000, title="Variable Phase",
+              tools="crosshair,pan,reset,save,wheel_zoom",
+              x_range=[0, 4], y_range=[-20, 20])
+
+        plot2.line('x', 'y', source=source, line_color='blue', line_width=3, line_alpha=0.6)
+
+        plot1
+        plot2
+
+
+# Phase difference plot:
+        W3 = W1 + W2
+      
+        source = ColumnDataSource(data=dict(x=time, y=W3))
+
+
+        # Set up plot
+        plot3 = figure(height=300, width=1000, title="Make your own wave",
+              tools="crosshair,pan,reset,save,wheel_zoom",
+              x_range=[0, 4], y_range=[-20, 20])
+
+        plot3.line('x', 'y', source=source, line_color='green', line_width=3, line_alpha=0.6)
+
+        plot3
+
+        # t = np.linspace(0,l,l*rate)
+        # data = np.sin(2*np.pi*freq*t)*amp
+        W3_audio = (W1_audio + W2_audio) * 10000
+        W3_audio = W3_audio.astype('int16')
+#        t, W_audio = const_note(freq*100, 4, amp = W3)
+        wavfile.write("temp/phase_audio.wav",44100,W3_audio)
+        st.audio("temp/phase_audio.wav")
+
+ 
