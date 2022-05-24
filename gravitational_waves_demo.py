@@ -435,7 +435,7 @@ if chirp_option == "Chirp Game":
         """
 
 
-        m1 = st.slider('Mass 1', min_value=20, max_value=50)
+        m1 = st.slider("Mass 1", min_value=20, max_value=50)
         m2 = st.slider('Mass 2', min_value=10, max_value=40)
 
         hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
@@ -494,78 +494,81 @@ if chirp_option == "Chirp Game":
         source = ColumnDataSource(data=dict(x=time, y=hp))
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
-        # Set up plot
-        plot = figure(height=400, width=1000, title="GW match chirp",
-              tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-5, 0])
+        col_anim, col_plot = st.columns([1,3])
+        with col_plot:
+                # Set up plot
+                plot = figure(height=300, width=800, title="GW match chirp",
+                      tools="crosshair,pan,reset,save,wheel_zoom", x_range=[-4, 0])
 
-        plot.title.text = result_statement(match)[0]
-        plot.title.align = "center"
-        plot.title.text_color =  result_statement(match)[1]
-        plot.title.text_font_size = "25px"
+                plot.title.text = result_statement(match)[0]
+                plot.title.align = "center"
+                plot.title.text_color =  result_statement(match)[1]
+                plot.title.text_font_size = "25px"
 
 
-        plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
-        plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
-        #plot.xlabel("time (seconds)")
-        #plot.ylabel("Gravitational Wave strength")
+                plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
+                plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
+                #plot.xlabel("time (seconds)")
+                #plot.ylabel("Gravitational Wave strength")
+                plot
+
+        with col_anim:
+                # ANIMATION        
+                fig,ax = plt.subplots(figsize=(3,3))
+                ax.set_axis_off()
+
+                fps = 30.
+                length = 8.
+
+                omega = 40./(m1 + m2)
+
+                # create a Binary instance for the event
+                binary = binary.Binary(
+                    m1 = m1,
+                    m2 = m2,
+                    alpha = 50.,
+                    beta = 20.,
+                    gamma = 95.,
+                    omega = omega,
+                    frame_rate = fps
+                    )
+
+                # evolve the binary over one orbit
+                n_frames = int(length*fps)
+
+                binary.evolve(n_frames)
+
+                # make BBH artist
+                bbh = artists.BinaryBlackHole(
+                    binary = binary,
+                    ax = ax,
+                    name='orbit',
+                    BH_scale = 1./100
+                )
+
+                artist_dict = {}
+                def init():
+                    artist_dict.update(bbh.setup_artists())
+                # configure plot axes, title
+                    ax.set_xlim([-1,1])
+                    ax.set_ylim([-1,1])
+                    #if args.name is not None:
+                    #    print('putting names on events')
+                    #    ax.set_title(args.name)
+                    return artist_dict
+
+                def animate(i):
+                    artist_dict.update(bbh.get_artists(i))
+                    return artist_dict
+
+                #print(f'saving to {args.outfile}')
+                outfile = f"temp/bbh.gif"
+                anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
+                anim.save(outfile,fps=fps,writer='imagemagick')
+                #anim.save(outfile,fps=fps)
+                st.image(outfile)
+
         #plot
-
-        # ANIMATION        
-        fig,ax = plt.subplots(figsize=(3,3))
-        ax.set_axis_off()
-
-        fps = 30.
-        length = 8.
-
-        omega = 40./(m1 + m2)
-
-        # create a Binary instance for the event
-        binary = binary.Binary(
-            m1 = m1,
-            m2 = m2,
-            alpha = 50.,
-            beta = 20.,
-            gamma = 95.,
-            omega = omega,
-            frame_rate = fps
-            )
-
-        # evolve the binary over one orbit
-        n_frames = int(length*fps)
-
-        binary.evolve(n_frames)
-
-        # make BBH artist
-        bbh = artists.BinaryBlackHole(
-            binary = binary,
-            ax = ax,
-            name='orbit',
-            BH_scale = 1./100
-        )
-
-        artist_dict = {}
-        def init():
-            artist_dict.update(bbh.setup_artists())
-        # configure plot axes, title
-            ax.set_xlim([-1,1])
-            ax.set_ylim([-1,1])
-            #if args.name is not None:
-            #    print('putting names on events')
-            #    ax.set_title(args.name)
-            return artist_dict
-
-        def animate(i):
-            artist_dict.update(bbh.get_artists(i))
-            return artist_dict
-
-        #print(f'saving to {args.outfile}')
-        outfile = f"temp/bbh.gif"
-        anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
-        anim.save(outfile,fps=fps,writer='imagemagick')
-        #anim.save(outfile,fps=fps)
-        st.image(outfile)
-
-        plot
 
         #user_input_m1 = st.text_input("Mass 1")
         #user_input_m2 = st.text_input("Mass 2")
