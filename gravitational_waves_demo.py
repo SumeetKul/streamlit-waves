@@ -686,7 +686,33 @@ if chirp_option == "Detecting Gravitational Waves":
         
         plot1
 
-        phi2 = st.slider('Phase 2', min_value=0., max_value=2*np.pi, step=0.1)
+        col_phase, col_polar = st.columns([2,1])
+        with col_phase:
+            phi2_deg = st.slider('Variable Phase (degrees)', min_value=0, max_value=360, step=5)
+            phi2 = phi2_deg * np.pi/180
+        with col_polar:
+            r = np.linspace(0, 1, 100)
+            theta = np.ones(100) * phi2
+
+            r0 = r
+            theta0 = np.zeros(100)
+ 
+            fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+            
+            ax.patch.set_facecolor('red')
+            ax.patch.set_alpha(abs(1-np.sin(phi2/2)))
+            #ax.patch.set_alpha(np.cos(phi2)**2)
+
+            ax.plot(theta, r, linewidth=4, color="blue")
+            ax.plot(theta0, r0, linewidth=4, color="yellow")
+            ax.set_rmax(1)
+            ax.set_rticks([])  # Less radial ticks
+            #ax.set_rlabel_position(-22.5)  # Move radial labels away from plotted line
+            ax.grid(True)
+
+            ax.set_title("Phase", va='bottom', fontsize=20)
+            plt.tight_layout()
+            fig
 
         W2 = A * np.sin(omega*time + phi2)
         W2_audio = A * np.sin(omega_audio*t + phi2)
