@@ -431,12 +431,29 @@ if chirp_option == "Oscillations, Waves, and Chirps":
 
 if chirp_option == "Chirp Game":
         """
-        ### You can make your own chirp!
+        #### Find the masses of binary black holes from some of the standout Gravitational-wave events detected by LIGO-Virgo.
         """
 
+        t = Table.read("GW_event_info.dat", format='ascii')
 
-        m1 = st.slider("Mass 1", min_value=20, max_value=50)
-        m2 = st.slider('Mass 2', min_value=10, max_value=40)
+        event_option = st.selectbox("Select Gravitational-wave event", t["name"])
+
+        event = t[t["name"]==event_option]
+        mass1_event = event["mass1"][0]
+        mass2_event = event["mass2"][0]
+
+        f"""
+        **{event["description"][0]}**
+
+        The gravitational-wave waveform for {event["name"][0]} can be seen as the blue waveform in the plot below.
+
+        Adjust the two black hole masses using the sliders, and see the binary black hole system in motion! You can also see the corresponding waveform for this binary you've created as the dashed black waveform in the plot.
+
+        Your task is to explore the mass parameters of the binary black hole to match your waveform with the {event["name"][0]} waveform. This will tell you how heavy {event["name"][0]}'s masses were!
+        """
+
+        m1 = st.slider("Mass 1", min_value=5, max_value=50)
+        m2 = st.slider('Mass 2', min_value=5, max_value=50)
 
         hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
                  mass1=m1,
@@ -446,8 +463,8 @@ if chirp_option == "Chirp Game":
                  f_lower=15.)
 
         hp, hc = get_td_waveform(approximant="IMRPhenomD",
-                 mass1=30,
-                 mass2=28,
+                 mass1=mass1_event,
+                 mass2=mass2_event,
                  coa_phase=np.pi,
                  delta_t=1.0/2048,
                  f_lower=15.)
@@ -494,7 +511,7 @@ if chirp_option == "Chirp Game":
         source = ColumnDataSource(data=dict(x=time, y=hp))
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
-        col_anim, col_plot = st.columns([1,3])
+        col_anim, col_plot = st.columns([1,2])
         with col_plot:
                 # Set up plot
                 plot = figure(height=300, width=800, title="GW match chirp",
@@ -508,13 +525,13 @@ if chirp_option == "Chirp Game":
 
                 plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
                 plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
-                #plot.xlabel("time (seconds)")
-                #plot.ylabel("Gravitational Wave strength")
-                plot
+        #plot.xlabel("time (seconds)")
+        #plot.ylabel("Gravitational Wave strength")
+                plot        
 
         with col_anim:
                 # ANIMATION        
-                fig,ax = plt.subplots(figsize=(3,3))
+                fig,ax = plt.subplots(figsize=(4,4))
                 ax.set_axis_off()
 
                 fps = 30.
@@ -566,9 +583,11 @@ if chirp_option == "Chirp Game":
                 anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
                 anim.save(outfile,fps=fps,writer='imagemagick')
                 #anim.save(outfile,fps=fps)
+
+                
                 st.image(outfile)
 
-        #plot
+        
 
         #user_input_m1 = st.text_input("Mass 1")
         #user_input_m2 = st.text_input("Mass 2")
@@ -578,8 +597,8 @@ if chirp_option == "Chirp Game":
         #else:
         #    print("""Incorrect Black Hole masses for the GW150914 event. Please try again!""")
 
-        """ #### Finally, you can compare the sound made by the Black Holes in the first event, GW150914, with the sound made by the Black Holes you selected: """
-        """ ##### Original Event Sound """
+        f""" ##### Finally, you can listen to the sound made by the Black Holes in the event {event["name"][0]} """
+        #""" ##### Original Event Sound """
 
 
         # This is based on https://www.gw-openscience.org/GW150914data/LOSC_Event_tutorial_GW150914.html#Frequency-shift-the-audio-files
@@ -629,13 +648,13 @@ if chirp_option == "Chirp Game":
         write_wavfile("temp/chirp_event_audio.wav", fs, W_audio)
         st.audio("temp/chirp_event_audio.wav")
 
-        """ ##### Your Chirp Sound """
-        tdata = hp1
+        #""" ##### Your Chirp Sound """
+        #tdata = hp1
         #template_data = np.int16(tdata/max(abs(tdata)) * 327670)
-        W_audio = freqshift(tdata, fshift=fshift, sample_rate = fs)
+        #W_audio = freqshift(tdata, fshift=fshift, sample_rate = fs)
         #W_audio = template_data
-        write_wavfile("temp/chirp_template_audio.wav",fs,W_audio)
-        st.audio("temp/chirp_template_audio.wav")
+        #write_wavfile("temp/chirp_template_audio.wav",fs,W_audio)
+        #st.audio("temp/chirp_template_audio.wav")
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
