@@ -506,9 +506,12 @@ if chirp_option == "Chirp Game":
                 #st.success("Match found!")
                 rs = "Perfect!"
                 rc = "green"
+            else:
+                rs = "Calculating Match..."
+                rc = "black"
             return rs, rc
-        rs = 0
-        rc = 'black'        
+        #rs = 0
+        #rc = 'black'        
         source = ColumnDataSource(data=dict(x=time, y=hp))
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
