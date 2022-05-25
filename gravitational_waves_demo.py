@@ -478,21 +478,16 @@ if chirp_option == "Chirp Game":
 
         time = np.linspace(-seglen, 0, n_samples)
 
+        hc1.resize(n_samples)
+        #print(hp1)
         ref_samples = hp1.shape[0]
-        sample_rate = 1024
+        #sample_rate = 1024
 
         seglen1 = ref_samples/sample_rate
 
         time1 = np.linspace(-seglen1, 0, ref_samples)
 
-        hp_norm = hp / np.linalg.norm(hp)
-        hp1_norm = hp1 / np.linalg.norm(hp1)
-        #conv = np.convolve(hp, hp1)
-        #match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
-        #corr = abs(np.correlate(hp_norm, hp1_norm))
-        #corr = signal.convolve(hp_norm, hp1_norm, mode='same', method='auto')/sum(hp_norm) 
-        #match = np.round(np.max(corr),3)
-        match = np.round(matchedfilter.match(hp, hp1)[0],2)
+        match = np.round(matchedfilter.match(hc, hc1)[0],2)
         #print(match)
         st.text(f"match = {match}")
         def result_statement(match):
@@ -517,8 +512,7 @@ if chirp_option == "Chirp Game":
                 rs = "Calculating Match..."
                 rc = "black"
             return rs, rc
-        #rs = 0
-        #rc = 'black'        
+
         source = ColumnDataSource(data=dict(x=time, y=hp))
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
@@ -536,8 +530,8 @@ if chirp_option == "Chirp Game":
 
                 plot.line('x', 'y', source=source, line_width=3, line_alpha=0.9)
                 plot.line('x1', 'y1', source=source1, line_width=3, line_color='black', line_alpha=0.6, line_dash='dashed')
-        #plot.xlabel("time (seconds)")
-        #plot.ylabel("Gravitational Wave strength")
+                #plot.xlabel("time (seconds)")
+                #plot.ylabel("Gravitational Wave strain")
                 plot        
 
         with col_anim:
@@ -600,15 +594,8 @@ if chirp_option == "Chirp Game":
 
         
 
-        #user_input_m1 = st.text_input("Mass 1")
-        #user_input_m2 = st.text_input("Mass 2")
 
-        #if user_input_m1 == 30 and user_input_m2 == 28:
-        #    """ *Congratulations!!* you have entered the correct masses for the Black Holes in the GW150914 event."""
-        #else:
-        #    print("""Incorrect Black Hole masses for the GW150914 event. Please try again!""")
-
-        f""" ##### Finally, you can listen to the sound made by the Black Holes in the event {event["name"][0]} """
+        f""" ##### Now, you can listen to the sound made by the Black Holes in the event {event["name"][0]} """
         #""" ##### Original Event Sound """
 
 
@@ -659,7 +646,6 @@ if chirp_option == "Chirp Game":
         write_wavfile("temp/chirp_event_audio.wav", fs, W_audio)
         st.audio("temp/chirp_event_audio.wav")
 
-        #""" ##### Your Chirp Sound """
         #tdata = hp1
         #template_data = np.int16(tdata/max(abs(tdata)) * 327670)
         #W_audio = freqshift(tdata, fshift=fshift, sample_rate = fs)
@@ -667,6 +653,7 @@ if chirp_option == "Chirp Game":
         #write_wavfile("temp/chirp_template_audio.wav",fs,W_audio)
         #st.audio("temp/chirp_template_audio.wav")
 
+        
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 ################################################ Part 3: Detecting Gravitational Waves #######################################################################
