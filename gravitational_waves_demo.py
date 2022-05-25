@@ -461,18 +461,18 @@ if chirp_option == "Chirp Game":
                  mass1=m1,
                  mass2=m2,
                  coa_phase=np.pi,
-                 delta_t=1.0/1024,
+                 delta_t=1.0/2048,
                  f_lower=15.)
 
         hp, hc = get_td_waveform(approximant="IMRPhenomD",
                  mass1=mass1_event,
                  mass2=mass2_event,
                  coa_phase=np.pi,
-                 delta_t=1.0/1024,
+                 delta_t=1.0/2048,
                  f_lower=15.)
 
         n_samples = hp.shape[0]
-        sample_rate = 1024
+        sample_rate = 2048
 
         seglen = n_samples/sample_rate
 
