@@ -9,10 +9,12 @@ from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, Slider, TextInput
 from bokeh.plotting import figure
 from pycbc.waveform import get_td_waveform, get_fd_waveform
+from pycbc.filter import matchedfilter
 import binary
 import artists 
 import wave
 from scipy.io import wavfile
+from scipy import signal
 #import soundfile as sf
 
 #from gwpy.timeseries import TimeSeries
@@ -485,9 +487,14 @@ if chirp_option == "Chirp Game":
 
         hp_norm = hp / np.linalg.norm(hp)
         hp1_norm = hp1 / np.linalg.norm(hp1)
-        conv = np.convolve(hp, hp1)
-        match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
-         
+        #conv = np.convolve(hp, hp1)
+        #match = np.round(np.max(abs(np.correlate(hp_norm, hp1_norm))), 2)
+        #corr = abs(np.correlate(hp_norm, hp1_norm))
+        #corr = signal.convolve(hp_norm, hp1_norm, mode='same', method='auto')/sum(hp_norm) 
+        #match = np.round(np.max(corr),3)
+        match = np.round(matchedfilter.match(hp, hp1)[0],2)
+        #print(match)
+        st.text(f"match = {match}")
         def result_statement(match):
             if 0.0 < match <= 0.25:
                 rs = "Different chirps, try again!"
