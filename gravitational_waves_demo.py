@@ -507,7 +507,8 @@ if chirp_option == "Chirp Game":
                 rs = "Perfect!"
                 rc = "green"
             return rs, rc
-                
+        rs = 0
+        rc = 'black'        
         source = ColumnDataSource(data=dict(x=time, y=hp))
         source1 = ColumnDataSource(data=dict(x1=time1, y1=hp1))
 
