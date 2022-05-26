@@ -1,6 +1,6 @@
-name mass1 mass2 description
-GW150914 35.0 29.0 "GW150914 was the first-ever gravitational-wave event detected by the twin LIGO observatories on September 14, 2015."
-GW151226 14.0 8.0 "GW151226, the ‘Boxing Day’ event, was the second merger of black holes announced by the LIGO collaboration, and the last event seen in their first observing run."
-GW170608 11.0 7.0 "GW170608 represents the lightest merger of binary black holes seen till date using gravitational waves."
-GW170814 30.0 25.0 "GW170814 was the first event seen by _three_ gravitational-wave detectors, soon after the European Gravitational-wave Observatory, VIRGO joined in the observations."
-GW190412 30.0 8.0 "GW190412 was the first ‘lopsided’ merger of black holes, where the primary black hole is much heavier than it’s companion"
+name mass1 mass2 description infosheet
+GW150914 35.0 29.0 "GW150914 was the first-ever gravitational-wave event detected by the twin LIGO observatories on September 14, 2015." "https://dcc.ligo.org/public/0123/G1600220/010/GW150914-FactSheet.pdf"
+GW151226 14.0 8.0 "GW151226, the ‘Boxing Day’ event, was the second merger of black holes announced by the LIGO collaboration, and the last event seen in their first observing run." "https://dcc.ligo.org/public/0126/G1601226/004/GW151226-FactSheet.pdf"
+GW170608 11.0 7.0 "GW170608 represents the lightest merger of binary black holes seen till date using gravitational waves." "https://www.ligo.org/detections/GW170608/images-GW170608/GW170608_Factsheet.pdf"
+GW170814 30.0 25.0 "GW170814 was the first event seen by _three_ gravitational-wave detectors, soon after the European Gravitational-wave Observatory, VIRGO joined in the observations." "http://public.virgo-gw.eu/wp-content/uploads/2017/09/GW170814-FactSheet.pdf"
+GW190412 30.0 8.0 "GW190412 was the first ‘lopsided’ merger of black holes, where the primary black hole is much heavier than it’s companion" "https://dcc.ligo.org/public/0167/G2000545/006/GW190412_Factsheet_Final.pdf"

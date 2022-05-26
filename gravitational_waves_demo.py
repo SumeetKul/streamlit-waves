@@ -73,7 +73,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         st.image("wave.gif")
 
         """
-        You just made a wave! A wave is anything that moves back and forth, _oscillating_ in a periodic pattern as time goes by. We can make a chart of these oscillations with time, giving us a waveform of evenly spaced, alternating peaks and troughs. 
+        You just made a wave! A wave is caused by anything that moves back and forth, _oscillating_ in a periodic pattern as time goes by. We can make a chart of these oscillations with time, giving us a waveform of evenly spaced, alternating peaks and troughs. 
 
 
         The peaks and troughs represent the extreme points of whatever is oscillating: your hand, water in a pond, or a pendulum. 
@@ -405,7 +405,9 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         So why the chirping waveform?
         """
 
-        st.image("cbc.png")
+        st.image("temp/cbc.png")
+        cbc_url = "https://www.soundsofspacetime.org/the-basics-of-binary-coalescence.html"
+        st.write(f"Image credit: [Sounds of Spacetime]({cbc_url})")
 
         """
         As the two black holes are revolving around each other, their motion radiates gravitational waves. This causes them to lost energy through these waves, pulling them closer towards each other. 
@@ -419,8 +421,9 @@ if chirp_option == "Oscillations, Waves, and Chirps":
 
         """
 
-        st.image("bbh.gif")
-
+        st.image("temp/bbh.gif")
+        bbh_gif_url = "https://www.ligo.caltech.edu/video/ligo20160211v3"
+        st.write(f"GIF credit: [LIGO Caltech]({bbh_gif_url})")
         """
 
         Each pair of black holes, called a **Binary Black Hole (BBH)** system, thus leaves a characteristic imprint of gravitational waveforms as they spiral in and collide into one.
@@ -452,10 +455,12 @@ if chirp_option == "Chirp Game":
         Adjust the two black hole masses using the sliders, and see the binary black hole system in motion! You can also see the corresponding waveform for this binary you've created as the dashed black waveform in the plot.
 
         Your task is to explore the mass parameters of the binary black hole to match your waveform with the {event["name"][0]} waveform. This will tell you how heavy {event["name"][0]}'s masses were!
+
+        As you try different mass combinations, keep a keen eye on what is happening to the dashed-line chirp. How do the amplitude and duration of the chirp vary with the individual black hole masses? What kind of chirp does a pair of lightweight or heavyweight black holes give? What if the black hole masses are extremely unbalanced?
         """
 
-        m1 = st.slider("Mass 1", min_value=5, max_value=50)
-        m2 = st.slider('Mass 2', min_value=5, max_value=50)
+        m1 = st.slider("Mass 1", min_value=5, max_value=50, value=20)
+        m2 = st.slider('Mass 2', min_value=5, max_value=50, value=20)
 
         hp1, hc1 = get_td_waveform(approximant="IMRPhenomD",
                  mass1=m1,
@@ -489,20 +494,20 @@ if chirp_option == "Chirp Game":
 
         match = np.round(matchedfilter.match(hc, hc1)[0],2)
         #print(match)
-        st.text(f"match = {match}")
+        st.text(f"match = {int(match*100)}%")
         def result_statement(match):
             if 0.0 < match <= 0.25:
                 rs = "Different chirps, try again!"
                 rc = "red"
             elif 0.25 < match <= 0.5:
                 rs = "Slight overlap, try again!"
-                rc = "red"
+                rc = "darkorange"
             elif 0.5 < match <= 0.75:
                 rs = "Getting closer... try again!"
                 rc = "orange"
             elif 0.75 < match < 1.0:
                 rs = "Almost there... try again!"
-                rc = "orange"
+                rc = "gold"
             elif match == 1.0:
                 st.balloons()
                 #st.success("Match found!")
@@ -595,8 +600,10 @@ if chirp_option == "Chirp Game":
         
 
 
-        f""" ##### Now, you can listen to the sound made by the Black Holes in the event {event["name"][0]} """
+        f""" ##### Listen to the sound made by the Black Holes in the event {event["name"][0]} """
         #""" ##### Original Event Sound """
+
+        event_url = event["infosheet"][0]
 
 
         # This is based on https://www.gw-openscience.org/GW150914data/LOSC_Event_tutorial_GW150914.html#Frequency-shift-the-audio-files
@@ -653,8 +660,22 @@ if chirp_option == "Chirp Game":
         #write_wavfile("temp/chirp_template_audio.wav",fs,W_audio)
         #st.audio("temp/chirp_template_audio.wav")
 
-        
+        f"""
+        You may find more information about the {event["name"][0]} event [here]({event_url}).
+        """
 
+
+        """
+        ###### Now, explore and find the black hole masses for other events in the list, or proceed to a short trivia on how the gravitational-wave chirp changes with the mass of black holes:
+        """        
+
+        question1 = st.radio("True or False: Increasing the mass of the black holes increases the amplitude of the waveform (i.e. makes the gravitational wave louder.", ('True', 'False'))
+
+        if question1 == 'True':
+            st.success("Correct Answer!")
+            """ For a given pair of binary black holes at the same distance away from us, the heavier pair will give out louder gravitational-waves. This is because heavier black holes radiate more gravitational-wave energy."""
+
+        
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 ################################################ Part 3: Detecting Gravitational Waves #######################################################################
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
