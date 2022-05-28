@@ -15,6 +15,7 @@ import artists
 import wave
 from scipy.io import wavfile
 from scipy import signal
+import lal
 #import soundfile as sf
 
 #from gwpy.timeseries import TimeSeries
@@ -48,7 +49,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         """
 
         #print(f'saving to {args.outfile}')
-        outfile = f"temp/gw150914.gif"
+        outfile = f"graphics/gw150914.gif"
         st.image(outfile)
 
 
@@ -56,7 +57,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         But rather than directly observing this event, LIGO detected Gravitational Waves, ripples in the fabric of spacetime given out by the motion of these dense and massive black holes. This is what the two LIGO detectors, one in Livingston, Louisiana, and the other in Hanford, Washington recorded on September 14, 2015.
         """
 
-        st.image("GW150914.png")
+        st.image("graphics/GW150914.png")
 
         """
         How does this signal translate into two black holes colliding? What makes a Gravitational _Wave_? To understand, let’s dive into the nature and properties of waves.
@@ -70,7 +71,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         """
         Greetings! Say hello to this tutorial with a wave of your hand:
         """
-        st.image("wave.gif")
+        st.image("graphics/wave.gif")
 
         """
         You just made a wave! A wave is caused by anything that moves back and forth, _oscillating_ in a periodic pattern as time goes by. We can make a chart of these oscillations with time, giving us a waveform of evenly spaced, alternating peaks and troughs. 
@@ -131,7 +132,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         """
         t, W_audio = const_note(440, 4)
         wavfile.write("const_waves_audio.wav",44100,W_audio)
-        st.audio("const_waves_audio.wav")
+        st.audio("audio/const_waves_audio.wav")
 
 
         """
@@ -190,7 +191,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
 
         """
 
-        st.audio("temp/ambulance-siren.mp3")
+        st.audio("audio/ambulance-siren.mp3")
 
         """
         The waveform of a siren looks like this. Can you see the variation in frequency and amplitude here?
@@ -405,7 +406,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
         So why the chirping waveform?
         """
 
-        st.image("temp/cbc.png")
+        st.image("graphics/cbc.png")
         cbc_url = "https://www.soundsofspacetime.org/the-basics-of-binary-coalescence.html"
         st.write(f"Image credit: [Sounds of Spacetime]({cbc_url})")
 
@@ -421,7 +422,7 @@ if chirp_option == "Oscillations, Waves, and Chirps":
 
         """
 
-        st.image("temp/bbh.gif")
+        st.image("graphics/bbh_starfield.gif")
         bbh_gif_url = "https://www.ligo.caltech.edu/video/ligo20160211v3"
         st.write(f"GIF credit: [LIGO Caltech]({bbh_gif_url})")
         """
@@ -439,7 +440,7 @@ if chirp_option == "Chirp Game":
         #### Find the masses of binary black holes from some of the standout Gravitational-wave events detected by LIGO-Virgo.
         """
 
-        t = Table.read("GW_event_info.dat", format='ascii')
+        t = Table.read("chirp_events/GW_event_info.dat", format='ascii')
 
         event_option = st.selectbox("Select Gravitational-wave event", t["name"])
 
@@ -469,13 +470,17 @@ if chirp_option == "Chirp Game":
                  delta_t=1.0/2048,
                  f_lower=20.)
 
-        hp, hc = get_td_waveform(approximant="IMRPhenomD",
-                 mass1=mass1_event,
-                 mass2=mass2_event,
-                 coa_phase=np.pi,
-                 delta_t=1.0/2048,
-                 f_lower=20.)
+        @st.cache(hash_funcs={lal.LIGOTimeGPS: (-3, -800000000)})
+        def load_event(mass1_event, mass2_event):
+            hp, hc = get_td_waveform(approximant="IMRPhenomD",
+                     mass1=mass1_event,
+                     mass2=mass2_event,
+                     coa_phase=np.pi,
+                     delta_t=1.0/2048,
+                     f_lower=20.)
+            return hp, hc
 
+        hp, hc = load_event(mass1_event, mass2_event)
         n_samples = hp.shape[0]
         sample_rate = 2048
 
@@ -589,7 +594,7 @@ if chirp_option == "Chirp Game":
                     return artist_dict
 
                 #print(f'saving to {args.outfile}')
-                outfile = f"temp/bbh.gif"
+                outfile = f"temp/chirpgame_anim.gif"
                 anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
                 anim.save(outfile,fps=fps,writer='imagemagick')
                 #anim.save(outfile,fps=fps)
@@ -699,7 +704,7 @@ if chirp_option == "Detecting Gravitational Waves":
 
         <more to add...>        
         """
-        st.image("temp/ligo.gif")
+        st.image("graphics/ligo.gif")
 
         time = np.arange(0,10, 0.01)
         t = np.linspace(0,4,4*44100)
@@ -719,7 +724,7 @@ if chirp_option == "Detecting Gravitational Waves":
               tools="crosshair,pan,reset,save,wheel_zoom",
               x_range=[0, 4], y_range=[-20, 20])
 
-        plot1.line('x', 'y', source=source, line_color='yellow', line_width=3, line_alpha=0.6)
+        plot1.line('x', 'y', source=source, line_color='gold', line_width=3, line_alpha=0.6)
 
         
         plot1
@@ -742,7 +747,7 @@ if chirp_option == "Detecting Gravitational Waves":
             #ax.patch.set_alpha(np.cos(phi2)**2)
 
             ax.plot(theta, r, linewidth=4, color="blue")
-            ax.plot(theta0, r0, linewidth=4, color="yellow")
+            ax.plot(theta0, r0, linewidth=4, color="gold")
             ax.set_rmax(1)
             ax.set_rticks([])  # Less radial ticks
             #ax.set_rlabel_position(-22.5)  # Move radial labels away from plotted line
