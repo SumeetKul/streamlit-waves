@@ -470,7 +470,7 @@ if chirp_option == "Chirp Game":
                  delta_t=1.0/2048,
                  f_lower=20.)
 
-        @st.cache(hash_funcs={lal.LIGOTimeGPS: (-3, -800000000)})
+        #@st.cache(hash_funcs={lal.LIGOTimeGPS: (-3, -800000000)})
         def load_event(mass1_event, mass2_event):
             hp, hc = get_td_waveform(approximant="IMRPhenomD",
                      mass1=mass1_event,
@@ -670,15 +670,15 @@ if chirp_option == "Chirp Game":
         """
 
 
-        """
+#        """
         ###### Now, explore and find the black hole masses for other events in the list, or proceed to a short trivia on how the gravitational-wave chirp changes with the mass of black holes:
-        """        
+      #  """        
 
-        question1 = st.radio("True or False: Increasing the mass of the black holes increases the amplitude of the waveform (i.e. makes the gravitational wave louder.", ('True', 'False'))
+#        question1 = st.radio("True or False: Increasing the mass of the black holes increases the amplitude of the waveform (i.e. makes the gravitational wave louder.", ('True', 'False'))
 
-        if question1 == 'True':
-            st.success("Correct Answer!")
-            """ For a given pair of binary black holes at the same distance away from us, the heavier pair will give out louder gravitational-waves. This is because heavier black holes radiate more gravitational-wave energy."""
+#        if question1 == 'True':
+#            st.success("Correct Answer!")
+#            """ For a given pair of binary black holes at the same distance away from us, the heavier pair will give out louder gravitational-waves. This is because heavier black holes radiate more gravitational-wave energy."""
 
         
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
@@ -702,7 +702,17 @@ if chirp_option == "Detecting Gravitational Waves":
         LIGO is the Laser _Interferometer_ Gravitational-wave Observatory. It is an _Interferometer_, which studies the interference between two laser beams that are shot along the two 4-km long arms of the L-shaped detector.
 
 
-        <more to add...>        
+        When the two beam paths are exactly equal in length, the light coming from the beams is designed to be exactly out of phase when it recombines at the center. This makes it interfere destructively, giving us zero signal at our photodetector.
+
+        However, a passing gravitational wave changes the length of one arm with respect to the other ever-so-slightly. This means the recombined laser beams are no longer perfectly out of phase, giving us a net signal that we can record as a gravitational wave.
+
+        The _phase difference_ between the laser beams coming from the two arms is hence what determines their relative displacement due to a gravitational wave, and thus the strength of that gravitational wave. 
+
+        In the following exercise, you will find an incoming light wave (orange) coming from one of the arms, which in this case is fixed. 
+
+        But you can shift the phase of the second light wave (blue) to be exactly matched that is interfere constructively, or exactly mismatched that is interfere destructively with the first wave - or some phase in between!
+
+        The moment you set a certain phase, the gravitational-wave photodetector will show the strength of the signal as a red output beam. If it's blank, the laser is in phase, the arms are of the same length, and there is no gravitational wave. But if you change the phase, see how the signal builds in the detector. At what point of phase does it become the strongest?        
         """
         st.image("graphics/ligo.gif")
 
