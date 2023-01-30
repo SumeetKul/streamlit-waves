@@ -22,4 +22,5 @@ All in all, streamlit makes it possible for creating a free, easy to deploy, int
 
 References: 
 [1] Jonah Kanner (2020). Gravitational-wave apps help students learn about black holes: [Streamlit blog](https://blog.streamlit.io/gravitational-wave-apps-help-students-learn-about-black-holes/)
+
 [2] [Link to streamlit app](https://sumeetkul-streamlit-waves-gravitational-waves-demo-kxxtwz.streamlitapp.com/)
