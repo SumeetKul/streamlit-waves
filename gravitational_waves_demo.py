@@ -1,10 +1,20 @@
 import streamlit as st
 import numpy as np
 from astropy.table import Table
+
+import matplotlib
+matplotlib.use('Agg')
+matplotlib.rcParams['text.usetex'] = False
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib import animation
 from matplotlib.patches import Circle
+
+from matplotlib.backends.backend_agg import RendererAgg
+lock = RendererAgg.lock
+
+import altair as alt
+import pandas as pd
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, Slider, TextInput
 from bokeh.plotting import figure
@@ -19,7 +29,7 @@ import lal
 #import soundfile as sf
 
 #from gwpy.timeseries import TimeSeries
-import pandas as pd
+#import pandas as pd
 
 def const_note(freq, l, amp=10000, rate=44100):
     t = np.linspace(0,l,l*rate)
@@ -89,12 +99,19 @@ if chirp_option == "Oscillations, Waves, and Chirps":
 
         W = A * np.sin(omega*time + phi)
 
-        fig = plt.figure(figsize=(10,6))
+        source = pd.DataFrame({
+        'time': time,
+        'Wave amplitude': W
+        })
 
-        plt.plot(time, W)
-        plt.xlabel("time (seconds)")
+        wave_1 = alt.Chart(source).mark_line().encode(x='time', y=alt.Y('Wave amplitude', scale=alt.Scale(domain=[-6, 6])))
+        st.altair_chart(wave_1, use_container_width=True)
+        #fig = plt.figure(figsize=(10,6))
 
-        fig
+        #plt.plot(time, W)
+        #plt.xlabel("time (seconds)")
+
+        #fig
 
         if st.checkbox("See the Math behind this"):
 
@@ -151,17 +168,23 @@ if chirp_option == "Oscillations, Waves, and Chirps":
 
         W = A * np.sin(omega*time + phi)
 
-        source = ColumnDataSource(data=dict(x=time, y=W))
+#        source = ColumnDataSource(data=dict(x=time, y=W))
+        source = pd.DataFrame({
+        'time': time,
+        'Wave amplitude': W
+        })
 
+        wave_var = alt.Chart(source).mark_line().encode(x='time', y=alt.Y('Wave amplitude', scale=alt.Scale(domain=[-6, 6])))
+        st.altair_chart(wave_var, use_container_width=True)
 
         # Set up plot
-        plot = figure(height=600, width=1000, title="Make your own wave",
-              tools="crosshair,pan,reset,save,wheel_zoom",
-              x_range=[0, 10], y_range=[-12, 12])
+#        plot = figure(height=600, width=1000, title="Make your own wave",
+#              tools="crosshair,pan,reset,save,wheel_zoom",
+#              x_range=[0, 10], y_range=[-12, 12])
 
-        plot.line('x', 'y', source=source, line_color='orange', line_width=3, line_alpha=0.6)
+#       plot.line('x', 'y', source=source, line_color='orange', line_width=3, line_alpha=0.6)
 
-        plot
+#        plot
         """
         #### Sound #2
         """
@@ -545,63 +568,71 @@ if chirp_option == "Chirp Game":
                 plot        
 
         with col_anim:
-                # ANIMATION        
-                fig,ax = plt.subplots(figsize=(4,4))
-                ax.set_axis_off()
-
-                fps = 30.
-                length = 8.
-
-                omega = 40./(m1 + m2)
-
-                # create a Binary instance for the event
-                binary = binary.Binary(
-                    m1 = m1,
-                    m2 = m2,
-                    alpha = 50.,
-                    beta = 20.,
-                    gamma = 95.,
-                    omega = omega,
-                    frame_rate = fps
-                    )
-
-                # evolve the binary over one orbit
-                n_frames = int(length*fps)
-
-                binary.evolve(n_frames)
-
-                # make BBH artist
-                bbh = artists.BinaryBlackHole(
-                    binary = binary,
-                    ax = ax,
-                    name='orbit',
-                    BH_scale = 1./100
-                )
-
-                artist_dict = {}
-                def init():
-                    artist_dict.update(bbh.setup_artists())
-                # configure plot axes, title
-                    ax.set_xlim([-1,1])
-                    ax.set_ylim([-1,1])
-                    #if args.name is not None:
-                    #    print('putting names on events')
-                    #    ax.set_title(args.name)
-                    return artist_dict
-
-                def animate(i):
-                    artist_dict.update(bbh.get_artists(i))
-                    return artist_dict
-
-                #print(f'saving to {args.outfile}')
-                outfile = f"temp/chirpgame_anim.gif"
-                anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
-                anim.save(outfile,fps=fps,writer='imagemagick')
-                #anim.save(outfile,fps=fps)
-
-                
-                st.image(outfile)
-
+                # ANIMATION
+                with lock:    
+    
+                        fig,ax = plt.subplots(figsize=(4,4))
+                        ax.set_axis_off()
+        
+                        fps = 30.
+                        length = 8.
+        
+                        omega = 40./(m1 + m2)
+        
+                        # create a Binary instance for the event
+                        binary = binary.Binary(
+                            m1 = m1,
+                            m2 = m2,
+                            alpha = 50.,
+                            beta = 20.,
+                            gamma = 95.,
+                            omega = omega,
+                            frame_rate = fps
+                            )
+        
+                        # evolve the binary over one orbit
+                        n_frames = int(length*fps)
+        
+                        binary.evolve(n_frames)
+        
+                        # make BBH artist
+                        bbh = artists.BinaryBlackHole(
+                            binary = binary,
+                            ax = ax,
+                            name='orbit',
+                            BH_scale = 1./100
+                        )
+        
+                        artist_dict = {}
+                        def init():
+                            artist_dict.update(bbh.setup_artists())
+                            #df = pd.DataFrame.from_dict(artist_dict)
+                        # configure plot axes, title
+                            ax.set_xlim([-1,1])
+                            ax.set_ylim([-1,1])
+                            #if args.name is not None:
+                            #    print('putting names on events')
+                            #    ax.set_title(args.name)
+                            return artist_dict
+        
+                        def animate(i):
+                            artist_dict.update(bbh.get_artists(i))
+                            #df = pd.DataFrame.from_dict(artist_dict)
+                            return artist_dict
+                        #print(init())                
+                        #bbh_animation = alt.Chart(df).mark_line().encode(
+                        #x=alt.X('1:T',axis=None),
+                        #y=alt.Y('0:Q',axis=None))
+        
+                        #print(f'saving to {args.outfile}')
+                        outfile = f"temp/chirpgame_anim.gif"
+                        anim = animation.FuncAnimation(fig,animate,init_func=init,frames=n_frames)
+                        anim.save(outfile,fps=fps,writer='imagemagick')
+                        #anim.save(outfile,fps=fps)
+        
+                        
+                        st.image(outfile)
+        
         
 
 
