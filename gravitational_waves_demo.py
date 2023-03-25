@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 from astropy.table import Table
 
+import streamlit_analytics
+
 import matplotlib
 matplotlib.use('Agg')
 matplotlib.rcParams['text.usetex'] = False
@@ -41,7 +43,7 @@ def var_note(freq, l, amp, rate=44100):
     data = np.sin(2*np.pi*freq*t)*amp
     return t, data.astype('int16') # two byte integers
 
-
+streamlit_analytics.start_tracking()
 
 chirp_option = st.sidebar.selectbox("Select Option", ["Oscillations, Waves, and Chirps", "Chirp Game", "Detecting Gravitational Waves"])
 
@@ -839,4 +841,4 @@ if chirp_option == "Detecting Gravitational Waves":
         wavfile.write("temp/phase_audio.wav",44100,W3_audio)
         st.audio("temp/phase_audio.wav")
 
- 
+streamlit_analytics.stop_tracking(unsafe_password="gw150914") 
