@@ -1,6 +1,6 @@
 # streamlit-waves
 
-A python and streamlit-based learning tool to use gravitational wave research to teach concepts in oscillations and waves in middle- and high-school physics classrooms. You may access it at this [link](https://sumeetkul-streamlit-waves-gravitational-waves-demo-kxxtwz.streamlitapp.com/).
+A python and streamlit-based learning tool to use gravitational wave research to teach concepts in oscillations and waves in middle- and high-school physics classrooms. You may access it at this [link](https://gravitational-waves-tutorial.streamlit.app/).
 
 Here is an outline of this project presented at the 4th International Astronomical Union (IAU)-Shaw workshop on 'Astronomy for Education', held in November 2022: [Youtube link](https://www.youtube.com/watch?v=j7WcEimtJtI&list=PLeQtlKnFCOppopOt_SMXh_IFFsMOLQu5_&index=59)
 
