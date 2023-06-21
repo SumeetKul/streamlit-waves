@@ -74,7 +74,7 @@ protobuf==3.19.4
 ptyprocess==0.7.0
 pure-eval==0.2.2
 pyarrow==7.0.0
-PyCBC
+PyCBC==2.0.5
 pycparser==2.21
 pydeck==0.7.1
 pyerfa==2.0.0.1
